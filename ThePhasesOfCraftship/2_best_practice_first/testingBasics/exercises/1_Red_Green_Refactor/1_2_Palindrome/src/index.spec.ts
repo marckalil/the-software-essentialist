@@ -12,17 +12,24 @@ import { isPalindrome } from './index';
 
 describe('palindrome checker', () => {
 	describe('When the input is equal to its reverse', () => {
-		describe('It is detected as a palindrome', () => {
-			const palindromeCases = ['mom', 'wow'];
-			it.each(palindromeCases)('knows that %s is a palindrome', (input) => {
-				expect(isPalindrome(input)).toBe(true);
+		describe('And the casing is the same', () => {
+			describe('It is detected as a palindrome', () => {
+				const palindromeCases = ['mom', 'wow'];
+				it.each(palindromeCases)('knows that %s is a palindrome', (input) => {
+					expect(isPalindrome(input)).toBe(true);
+				});
+			});
+		});
+		describe('And the casing is different', () => {
+			describe('It is detected as a palindrome', () => {
+				const palindromeCases = ['Mom', 'WooW', 'xMomx'];
+				it.each(palindromeCases)('knows that %s is a palindrome', (input) => {
+					expect(isPalindrome(input)).toBe(true);
+				});
 			});
 		});
 	});
 	it('knows that bill is not a palindrome', () => {
 		expect(isPalindrome('bill')).toBe(false)
-	});
-	it('knows that Mom is a palindrome', () => {
-		expect(isPalindrome('Mom')).toBe(true)
 	});
 });
