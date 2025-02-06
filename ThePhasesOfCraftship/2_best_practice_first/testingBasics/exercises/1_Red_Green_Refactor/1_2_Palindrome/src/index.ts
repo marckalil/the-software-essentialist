@@ -7,6 +7,12 @@ function removeWhiteSpaces(input: string): string {
 return input.replace(whiteSpacesRegex, '');
 }
 
+function formatInput(input: string): string {
+	return removeWhiteSpaces(input.toLowerCase());
+}
+
 export function isPalindrome(input: string): boolean {
-	return removeWhiteSpaces(input.toLowerCase()) === reversedString(removeWhiteSpaces(input)).toLowerCase();
+	const formattedInput = formatInput(input);
+	const reversedInput = reversedString(formattedInput);
+	return formattedInput === reversedInput;
 }
