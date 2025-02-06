@@ -28,6 +28,9 @@ describe('palindrome checker', () => {
 				});
 			});
 		});
+		it('knows that "Was It A Rat I Saw" is a palindrome', () => {
+			expect(isPalindrome('Was It A Rat I Saw')).toBe(true);
+		});
 	});
 	it('knows that bill is not a palindrome', () => {
 		expect(isPalindrome('bill')).toBe(false)
