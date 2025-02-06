@@ -17,4 +17,7 @@ describe('palindrome checker', () => {
 	it('knows that bill is not a palindrome', () => {
 		expect(isPalindrome('bill')).toBe(false)
 	});
+	it('knows that wow is a palindrome', () => {
+		expect(isPalindrome('wow')).toBe(true)
+	});
 })
