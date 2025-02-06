@@ -1,9 +1,12 @@
-const whiteSpacesRegex = /\s/g;
-
 function reversedString(input: string): string {
 	return input.split('').reverse().join('');
 }
 
+function removeWhiteSpaces(input: string): string {
+	const whiteSpacesRegex = /\s/g;
+return input.replace(whiteSpacesRegex, '');
+}
+
 export function isPalindrome(input: string): boolean {
-	return input.toLowerCase().replace(whiteSpacesRegex, '') === reversedString(input).toLowerCase().replace(whiteSpacesRegex, '');
+	return removeWhiteSpaces(input.toLowerCase()) === reversedString(removeWhiteSpaces(input)).toLowerCase();
 }

@@ -28,8 +28,14 @@ describe('palindrome checker', () => {
 				});
 			});
 		});
-		it('knows that "Was It A Rat I Saw" is a palindrome', () => {
-			expect(isPalindrome('Was It A Rat I Saw')).toBe(true);
+
+		describe('And the input is a phrase', () => {
+			describe('It is detected as a palindrome', () => {
+				const palindromeCases = ['Was It A Rat I Saw', 'Never Odd or Even'];
+				it.each(palindromeCases)('knows that %s is a palindrome', (input) => {
+					expect(isPalindrome(input)).toBe(true);
+				});
+			});
 		});
 	});
 	it('knows that bill is not a palindrome', () => {
