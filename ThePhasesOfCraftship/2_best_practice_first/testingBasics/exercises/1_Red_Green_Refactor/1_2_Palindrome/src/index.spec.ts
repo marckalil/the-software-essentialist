@@ -1,3 +1,5 @@
+import { isPalindrome } from './index';
+
 /**
  * Description:
  * Create a palindrome checker that should be able to detect that a string is a palindrome;
