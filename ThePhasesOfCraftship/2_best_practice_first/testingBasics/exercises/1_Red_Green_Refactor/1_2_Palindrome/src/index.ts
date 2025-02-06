@@ -1,3 +1,4 @@
 export function isPalindrome(input: string): boolean {
-	return true;
+	if (input === 'mom') return true
+	return false;
 }
