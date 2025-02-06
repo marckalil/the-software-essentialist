@@ -1,3 +1,3 @@
 export function isPalindrome(input: string): boolean {
-	return input === input.split('').reverse().join('');
+	return input.toLowerCase() === input.split('').reverse().join('').toLowerCase();
 }
