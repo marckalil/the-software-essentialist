@@ -15,7 +15,7 @@ describe('palindrome checker', () => {
 		describe('And the casing is the same', () => {
 			describe('It is detected as a palindrome', () => {
 				const palindromeCases = ['mom', 'wow'];
-				it.each(palindromeCases)('knows that %s is a palindrome', (input) => {
+				it.each(palindromeCases)('knows that "%s" is a palindrome', (input) => {
 					expect(isPalindrome(input)).toBe(true);
 				});
 			});
@@ -23,7 +23,7 @@ describe('palindrome checker', () => {
 		describe('And the casing is different', () => {
 			describe('It is detected as a palindrome', () => {
 				const palindromeCases = ['Mom', 'WooW', 'xMomx'];
-				it.each(palindromeCases)('knows that %s is a palindrome', (input) => {
+				it.each(palindromeCases)('knows that "%s" is a palindrome', (input) => {
 					expect(isPalindrome(input)).toBe(true);
 				});
 			});
@@ -31,14 +31,20 @@ describe('palindrome checker', () => {
 
 		describe('And the input is a phrase', () => {
 			describe('It is detected as a palindrome', () => {
-				const palindromeCases = ['Was It A Rat I Saw', 'Never Odd or Even'];
-				it.each(palindromeCases)('knows that %s is a palindrome', (input) => {
+				const palindromeCases = ['Was It A Rat I Saw', 'Never Odd or Even', '1Never Odd or Even1'];
+				it.each(palindromeCases)('knows that "%s" is a palindrome', (input) => {
 					expect(isPalindrome(input)).toBe(true);
 				});
 			});
 		});
 	});
-	it('knows that bill is not a palindrome', () => {
-		expect(isPalindrome('bill')).toBe(false)
+
+	describe('When the input is not equal to its reverse', () => {
+		describe('It is detected as NOT a palindrome', () => {
+			const nonPalindromeCases = ['bill', 'xMom', 'Never Odd or Even1'];
+			it.each(nonPalindromeCases)('knows that "%s" is not a palindrome', (input) => {
+				expect(isPalindrome(input)).toBe(false)
+			});
+		});
 	});
 });
