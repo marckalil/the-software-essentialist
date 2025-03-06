@@ -13,6 +13,8 @@
  * "thePhysical1234567" returns a false-y response because of exceeding the 15 character length
  */
 
+import { passwordValidator } from './index';
+
 describe('password validator', () => {
   describe('Output object', () => {
     it('should contain a "result" key', () => {
