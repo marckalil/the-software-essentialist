@@ -14,10 +14,16 @@
  */
 
 describe('password validator', () => {
-
-  test('hello', () => {
-    expect("between 5 and 15").toContain('5 and 15')
-  })
+  describe('Output object', () => {
+    it('should contain a "result" key', () => {
+      const response = passwordValidator('');
+      expect(response).toHaveProperty('result');
+    });
+    it('should contain an "errors" key', () => {
+      const response = passwordValidator('');
+      expect(response).toHaveProperty('errors');
+    });
+  });
 })
 
 
