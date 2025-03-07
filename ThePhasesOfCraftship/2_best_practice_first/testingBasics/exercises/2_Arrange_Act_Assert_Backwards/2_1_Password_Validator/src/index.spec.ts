@@ -13,7 +13,7 @@
  * "thePhysical1234567" returns a false-y response because of exceeding the 15 character length
  */
 
-import { passwordValidator } from './index';
+import { ErrorTypes, passwordValidator } from './index';
 
 describe('password validator', () => {
   describe('Output object', () => {
@@ -27,8 +27,7 @@ describe('password validator', () => {
     });
   });
   describe('Password is between 5 and 15 characters long', () => {
-    const tooShortCases = ['aB1', 'aB34', 'thePhysical1234', 'thePhysical1234567'];
-    const tooLongCases = ['thePhysical1234', 'thePhysical1234567'];
+    const tooShortCases = ['aB1', 'aB34'];
     describe.each(tooShortCases)('Password: %s is too short', (password) => {
       it('should return a false-y response', () => {
         const response = passwordValidator(password);
