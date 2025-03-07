@@ -15,9 +15,9 @@
 
 /**
  * Valid Examples:
+ * "aB123" returns a truth-y response => 5 characters
  * "maxwell1C" returns a truth-y response
- * "0maxwellTheBest" returns a truth-y response
- * "thePhysical123456" returns a truth-y response
+ * "thePhysical1234" returns a truth-y response => 15 characters
  */
 
 import { ErrorTypes, passwordValidator } from './index';
@@ -34,7 +34,7 @@ describe('password validator', () => {
     });
   });
   describe('Valid password', () => {
-    const validCases = ['maxwell1C', '0maxwellTheBest', 'thePhysical123456'];
+    const validCases = ['aB123', 'maxwell1C', 'thePhysical1234'];
     describe.each(validCases)('Password: %s is valid', (password) => {
       it('returns an object with "result" key "true"', () => {
         const response = passwordValidator(password);
