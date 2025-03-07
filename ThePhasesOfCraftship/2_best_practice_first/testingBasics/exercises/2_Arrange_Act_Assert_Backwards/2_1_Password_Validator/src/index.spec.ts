@@ -48,7 +48,19 @@ describe('password validator', () => {
   });
   describe('Password is between 5 and 15 characters long', () => {
     const tooShortCases = ['aB1', 'aB34'];
+    const tooLongCases = ['aB123456789012345', 'thePhysical1234567'];
     describe.each(tooShortCases)('Password: %s is too short', (password) => {
+      it('should return a false-y response', () => {
+        const response = passwordValidator(password);
+        expect(response.result).toBeFalsy();
+      });
+      it('should return an error message', () => {
+        const response = passwordValidator(password);
+        expect(response.errors).toHaveLength(1);
+        expect(response.errors[0]).toEqual(ErrorTypes.invalidLength);
+      });
+    });
+    describe.each(tooLongCases)('Password: %s is too long', (password) => {
       it('should return a false-y response', () => {
         const response = passwordValidator(password);
         expect(response.result).toBeFalsy();
