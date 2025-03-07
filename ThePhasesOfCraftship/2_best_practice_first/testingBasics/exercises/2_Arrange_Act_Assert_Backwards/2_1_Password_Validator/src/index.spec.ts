@@ -13,6 +13,13 @@
  * "thePhysical1234567" returns a false-y response because of exceeding the 15 character length
  */
 
+/**
+ * Valid Examples:
+ * "maxwell1C" returns a truth-y response
+ * "0maxwellTheBest" returns a truth-y response
+ * "thePhysical123456" returns a truth-y response
+ */
+
 import { ErrorTypes, passwordValidator } from './index';
 
 describe('password validator', () => {
@@ -24,6 +31,19 @@ describe('password validator', () => {
     it('should contain an "errors" key', () => {
       const response = passwordValidator('');
       expect(response).toHaveProperty('errors');
+    });
+  });
+  describe('Valid password', () => {
+    const validCases = ['maxwell1C', '0maxwellTheBest', 'thePhysical123456'];
+    describe.each(validCases)('Password: %s is valid', (password) => {
+      it('returns an object with "result" key "true"', () => {
+        const response = passwordValidator(password);
+        expect(response).toHaveProperty('result', true);
+      });
+      it('returns an object with an empty "errors" array', () => {
+        const response = passwordValidator(password);
+        expect(response).toHaveProperty('errors', []);
+      });
     });
   });
   describe('Password is between 5 and 15 characters long', () => {
