@@ -46,24 +46,17 @@ describe('password validator', () => {
       });
     });
   });
-  describe('Password is between 5 and 15 characters long', () => {
-    const tooShortCases = ['aB1', 'aB34'];
-    const tooLongCases = ['aB123456789012345', 'thePhysical1234567'];
-    describe.each(tooShortCases)('Password: %s is too short', (password) => {
-      it('should return a false-y response', () => {
+  describe('Password is not between 5 and 15 characters long', () => {
+    const lengthErrorCases: [string, string][] = [
+      ['aB1', 'short'],
+      ['aB34', 'short'],
+      ['aB12345678901234', 'long'],
+      ['thePhysical1234567', 'long']
+    ];
+    describe.each(lengthErrorCases)('Password: %s is too %s', (password) => {
+      it('returns an object with "result" key "false"', () => {
         const response = passwordValidator(password);
-        expect(response.result).toBeFalsy();
-      });
-      it('should return an error message', () => {
-        const response = passwordValidator(password);
-        expect(response.errors).toHaveLength(1);
-        expect(response.errors[0]).toEqual(ErrorTypes.invalidLength);
-      });
-    });
-    describe.each(tooLongCases)('Password: %s is too long', (password) => {
-      it('should return a false-y response', () => {
-        const response = passwordValidator(password);
-        expect(response.result).toBeFalsy();
+        expect(response).toHaveProperty('result', false);
       });
       it('should return an error message', () => {
         const response = passwordValidator(password);
