@@ -68,7 +68,7 @@ describe('password validator', () => {
   });
 
   describe('Password does not contain at least one digit', () => {
-    const digitErrorCases = ['maxwell', 'thePhysical'];
+    const digitErrorCases = ['maxwellTheBest', 'thePhysical'];
     describe.each(digitErrorCases)('Password: %s does not contain a digit', (password) => {
       it('returns an object with "result" key "false"', () => {
         const response = passwordValidator(password);
