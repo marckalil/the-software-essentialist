@@ -96,6 +96,40 @@ describe('password validator', () => {
       });
     });
   });
+
+  describe('Password contains multiple errors', () => {
+    it('knows "max1" is too short and missing an uppercase letter', () => {
+      const response = passwordValidator('max1');
+      expect(response).toHaveProperty('result', false);
+      expect(response.errors).toHaveLength(2);
+      expect(response.errors).toContain(ErrorTypes.invalidLength);
+      expect(response.errors).toContain(ErrorTypes.missingUpperCase);
+    }
+    );
+    it('knows "thePhyyyyyyyyyyyyyyysical" is missing a digit and is too long', () => {
+      const response = passwordValidator('thePhyyyyyyyyyyyyyyysical');
+      expect(response).toHaveProperty('result', false);
+      expect(response.errors).toHaveLength(2);
+      expect(response.errors).toContain(ErrorTypes.missingDigit);
+      expect(response.errors).toContain(ErrorTypes.invalidLength);
+    });
+    it('knows "max" is too short, missing a digit and an uppercase letter', () => {
+      const response = passwordValidator('max');
+      expect(response).toHaveProperty('result', false);
+      expect(response.errors).toHaveLength(3);
+      expect(response.errors).toContain(ErrorTypes.invalidLength);
+      expect(response.errors).toContain(ErrorTypes.missingDigit);
+      expect(response.errors).toContain(ErrorTypes.missingUpperCase);
+    });
+    it('knows "thephyyyyyyyyyyyyyyysical" is too long, missing a digit and an uppercase letter', () => {
+      const response = passwordValidator('thephyyyyyyyyyyyyyyysical');
+      expect(response).toHaveProperty('result', false);
+      expect(response.errors).toHaveLength(3);
+      expect(response.errors).toContain(ErrorTypes.missingDigit);
+      expect(response.errors).toContain(ErrorTypes.invalidLength);
+      expect(response.errors).toContain(ErrorTypes.missingUpperCase);
+    }); 
+  });
 })
 
 
