@@ -65,6 +65,20 @@ describe('password validator', () => {
       });
     });
   });
+  describe('Password does not contain at least one digit', () => {
+    const digitErrorCases = ['maxwell', 'thePhysical'];
+    describe.each(digitErrorCases)('Password: %s does not contain a digit', (password) => {
+      it('returns an object with "result" key "false"', () => {
+        const response = passwordValidator(password);
+        expect(response).toHaveProperty('result', false);
+      });
+      it('should return an error message', () => {
+        const response = passwordValidator(password);
+        expect(response.errors).toHaveLength(1);
+        expect(response.errors[0]).toEqual(ErrorTypes.missingDigit);
+      });
+    });
+  });
 })
 
 
