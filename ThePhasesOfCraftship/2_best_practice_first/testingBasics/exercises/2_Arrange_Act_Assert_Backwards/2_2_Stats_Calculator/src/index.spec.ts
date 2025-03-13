@@ -72,5 +72,15 @@ describe('stats calculator', () => {
 				expect(statsCalculator([10, 6, 4, 2, 8])).toHaveProperty('min', 2);
 			});
 		});
+		describe('When the input is [3, -3, 0]', () => {
+			it('Should return -3', () => {
+				expect(statsCalculator([3, -3, 0])).toHaveProperty('min', -3);
+			});
+		});
+		describe('When the input is [35, 5, 25, 15]', () => {
+			it('Should return 5', () => {
+				expect(statsCalculator([35, 5, 25, 15])).toHaveProperty('min', 5);
+			});
+		});
 	});
 })
