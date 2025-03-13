@@ -63,17 +63,49 @@ Sum = 60 + 20 + 40 + 30 + 50 + 10 = 210
 Average = 210 / 6 = 35 ✅
 */
 
-import statsCalculator from './index';
+import statsCalculator, { Stats } from './index';
 
 
+type InputWithStats = {
+	inputNumbers: number[];
+	stats: Stats;
+};
+
+const inputsWithStats: InputWithStats[] = [
+	{
+		inputNumbers: [10, 6, 4, 2, 8],
+		stats: {
+			min: 2,
+			max: 10,
+			nbOfElements: 5,
+		},
+	},
+	{
+		inputNumbers: [3, -3, 0],
+		stats: {
+			min: -3,
+			max: 3,
+			nbOfElements: 3,
+		},
+	},
+	{
+		inputNumbers: [35, 5, 25, 15],
+		stats: {
+			min: 5,
+			max: 35,
+			nbOfElements: 4,
+		},
+	}
+];
 
 describe('stats calculator', () => {
 	describe('Minimum value', () => {
 		const minimumValueCases: [number[], number][] = [
-			[[10, 6, 4, 2, 8], 2],
-			[[3, -3, 0], -3],
-			[[35, 5, 25, 15], 5],
-		];describe.each(minimumValueCases)('When the input is %s', (inputNumbers, expectedMin) => {
+			[inputsWithStats[0].inputNumbers, inputsWithStats[0].stats.min],
+			[inputsWithStats[1].inputNumbers, inputsWithStats[1].stats.min],
+			[inputsWithStats[2].inputNumbers, inputsWithStats[2].stats.min],
+		];
+		describe.each(minimumValueCases)('When the input is %s', (inputNumbers, expectedMin) => {
 			it(`should return ${expectedMin}`, () => {
 				expect(statsCalculator(inputNumbers)).toHaveProperty('min', expectedMin);
 			});
@@ -81,9 +113,9 @@ describe('stats calculator', () => {
 	});
 	describe('Maximum value', () => {
 		const maximumValueCases: [number[], number][] = [
-			[[10, 6, 4, 2, 8], 10],
-			[[3, -3, 0], 3],
-			[[35, 5, 25, 15], 35],
+			[inputsWithStats[0].inputNumbers, inputsWithStats[0].stats.max],
+			[inputsWithStats[1].inputNumbers, inputsWithStats[1].stats.max],
+			[inputsWithStats[2].inputNumbers, inputsWithStats[2].stats.max],
 		];
 		describe.each(maximumValueCases)('When the input is %s', (inputNumbers, expectedMax) => {
 			it(`should return ${expectedMax}`, () => {
@@ -93,9 +125,9 @@ describe('stats calculator', () => {
 	});
 	describe('Number of elements in the sequence', () => {
 		const numberOfElementsCases: [number[], number][] = [
-			[[10, 6, 4, 2, 8], 5],
-			[[3, -3, 0], 3],
-			[[35, 5, 25, 15], 4],
+			[inputsWithStats[0].inputNumbers, inputsWithStats[0].stats.nbOfElements],
+			[inputsWithStats[1].inputNumbers, inputsWithStats[1].stats.nbOfElements],
+			[inputsWithStats[2].inputNumbers, inputsWithStats[2].stats.nbOfElements],
 		];
 		describe.each(numberOfElementsCases)('When the input is %s', (inputNumbers, expectedNbOfElements) => {
 			it(`should return ${expectedNbOfElements}`, () => {

@@ -1,4 +1,4 @@
-type Stats = {
+export type Stats = {
 	min: number;
 	max: number;
 	nbOfElements: number;
