@@ -135,4 +135,16 @@ describe('stats calculator', () => {
 			});
 		});
 	});
+	describe('Average value', () => {
+		const averageValueCases: [number[], number][] = [
+			[inputsWithStats[0].inputNumbers, 6],
+			[inputsWithStats[1].inputNumbers, 0],
+			[inputsWithStats[2].inputNumbers, 20],
+		];
+		describe.each(averageValueCases)('When the input is %s', (inputNumbers, expectedAverage) => {
+			it(`should return ${expectedAverage}`, () => {
+				expect(statsCalculator(inputNumbers)).toHaveProperty('average', expectedAverage);
+			});
+		});
+	});
 });
