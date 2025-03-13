@@ -75,24 +75,27 @@ const inputsWithStats: InputWithStats[] = [
 	{
 		inputNumbers: [10, 6, 4, 2, 8],
 		stats: {
-			min: 2,
+			average: 6,
 			max: 10,
+			min: 2,
 			nbOfElements: 5,
 		},
 	},
 	{
 		inputNumbers: [3, -3, 0],
 		stats: {
-			min: -3,
+			average: 0,
 			max: 3,
+			min: -3,
 			nbOfElements: 3,
 		},
 	},
 	{
 		inputNumbers: [35, 5, 25, 15],
 		stats: {
-			min: 5,
+			average: 20,
 			max: 35,
+			min: 5,
 			nbOfElements: 4,
 		},
 	}
@@ -137,9 +140,9 @@ describe('stats calculator', () => {
 	});
 	describe('Average value', () => {
 		const averageValueCases: [number[], number][] = [
-			[inputsWithStats[0].inputNumbers, 6],
-			[inputsWithStats[1].inputNumbers, 0],
-			[inputsWithStats[2].inputNumbers, 20],
+			[inputsWithStats[0].inputNumbers, inputsWithStats[0].stats.average],
+			[inputsWithStats[1].inputNumbers, inputsWithStats[1].stats.average],
+			[inputsWithStats[2].inputNumbers, inputsWithStats[2].stats.average],
 		];
 		describe.each(averageValueCases)('When the input is %s', (inputNumbers, expectedAverage) => {
 			it(`should return ${expectedAverage}`, () => {

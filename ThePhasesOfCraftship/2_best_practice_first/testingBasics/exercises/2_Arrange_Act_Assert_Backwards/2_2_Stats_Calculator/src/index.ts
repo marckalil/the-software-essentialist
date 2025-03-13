@@ -1,8 +1,8 @@
 export type Stats = {
-	min: number;
-	max: number;
-	nbOfElements: number;
 	average: number;
+	max: number;
+	min: number;
+	nbOfElements: number;
 };
 
 export default function statsCalculator(numbers: number[]): Stats {
@@ -20,9 +20,9 @@ export default function statsCalculator(numbers: number[]): Stats {
 	const average = sum / nbOfElements;
 
 	return {
-		min,
-		max,
-		nbOfElements,
 		average,
+		max,
+		min,
+		nbOfElements,
 	}
 }
