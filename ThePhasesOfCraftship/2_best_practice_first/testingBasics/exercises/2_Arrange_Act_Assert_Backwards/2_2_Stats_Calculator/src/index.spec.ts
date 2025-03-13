@@ -63,6 +63,8 @@ Sum = 60 + 20 + 40 + 30 + 50 + 10 = 210
 Average = 210 / 6 = 35 ✅
 */
 
+import statsCalculator from './index';
+
 describe('stats calculator', () => {
 	describe('Minimum value', () => {
 		describe('When the input is [10, 6, 4, 2, 8]', () => {
