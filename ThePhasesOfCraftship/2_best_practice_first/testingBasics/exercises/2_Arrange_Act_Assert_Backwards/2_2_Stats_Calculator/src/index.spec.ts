@@ -64,4 +64,11 @@ Average = 210 / 6 = 35 ✅
 */
 
 describe('stats calculator', () => {
+	describe('Minimum value', () => {
+		describe('When the input is [10, 6, 4, 2, 8]', () => {
+			it('Should return 2', () => {
+				expect(statsCalculator([10, 6, 4, 2, 8])).toHaveProperty('min', 2);
+			});
+		});
+	});
 })
