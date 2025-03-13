@@ -91,4 +91,16 @@ describe('stats calculator', () => {
 			});
 		});
 	});
+	describe('Number of elements in the sequence', () => {
+		const numberOfElementsCases: [number[], number][] = [
+			[[10, 6, 4, 2, 8], 5],
+			[[3, -3, 0], 3],
+			[[35, 5, 25, 15], 4],
+		];
+		describe.each(numberOfElementsCases)('When the input is %s', (inputNumbers, expectedNbOfElements) => {
+			it(`should return ${expectedNbOfElements}`, () => {
+				expect(statsCalculator(inputNumbers)).toHaveProperty('nbOfElements', expectedNbOfElements);
+			});
+		});
+	});
 });
