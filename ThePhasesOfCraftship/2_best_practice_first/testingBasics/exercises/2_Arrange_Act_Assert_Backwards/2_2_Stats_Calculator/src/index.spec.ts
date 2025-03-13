@@ -65,22 +65,18 @@ Average = 210 / 6 = 35 ✅
 
 import statsCalculator from './index';
 
+const minimumValueCases: [number[], number][] = [
+	[[10, 6, 4, 2, 8], 2],
+	[[3, -3, 0], -3],
+	[[35, 5, 25, 15], 5],
+];
+
 describe('stats calculator', () => {
 	describe('Minimum value', () => {
-		describe('When the input is [10, 6, 4, 2, 8]', () => {
-			it('Should return 2', () => {
-				expect(statsCalculator([10, 6, 4, 2, 8])).toHaveProperty('min', 2);
-			});
-		});
-		describe('When the input is [3, -3, 0]', () => {
-			it('Should return -3', () => {
-				expect(statsCalculator([3, -3, 0])).toHaveProperty('min', -3);
-			});
-		});
-		describe('When the input is [35, 5, 25, 15]', () => {
-			it('Should return 5', () => {
-				expect(statsCalculator([35, 5, 25, 15])).toHaveProperty('min', 5);
+		describe.each(minimumValueCases)('When the input is %s', (inputNumbers, expectedMin) => {
+			it(`should return ${expectedMin}`, () => {
+				expect(statsCalculator(inputNumbers)).toHaveProperty('min', expectedMin);
 			});
 		});
 	});
-})
+});
