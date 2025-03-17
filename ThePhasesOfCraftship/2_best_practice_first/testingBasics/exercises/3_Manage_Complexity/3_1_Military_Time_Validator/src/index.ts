@@ -24,7 +24,9 @@ export function isMilitaryTime(input: string): boolean {
 	const [startHour, startMinutes] = startTime.split(':').map(Number);
 	const [endHour, endMinutes] = endTime.split(':').map(Number);
 
-	if (!isHourInValidRange(startHour) || !isHourInValidRange(endHour)) return false;
-	if (!areMinutesInValidRange(startMinutes) || !areMinutesInValidRange(endMinutes)) return false;
-	return true;
+	const areTimeHoursInValidRange = isHourInValidRange(startHour) && isHourInValidRange(endHour);
+	const areTimeMinutesInValidRange = areMinutesInValidRange(startMinutes) && areMinutesInValidRange(endMinutes);
+	const isTimeInValidRange = areTimeHoursInValidRange && areTimeMinutesInValidRange;
+
+	return isTimeInValidRange;
 }
