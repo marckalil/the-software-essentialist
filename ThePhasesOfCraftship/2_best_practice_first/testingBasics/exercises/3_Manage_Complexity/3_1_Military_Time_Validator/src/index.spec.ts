@@ -38,6 +38,11 @@ const invalidFormatCases: string[] = [
 	'00:00 - +2B:59'
 ];
 
+const hoursOutOfRangeCases: string[] = [
+	'24:00 - 23:59',
+	'00:00 - 24:00'
+];
+
 describe('military time validator', () => {
 	describe('Valid cases', () => {
 		it.each(validCases)('%s is a valid Military Time', (input) => {
@@ -47,6 +52,12 @@ describe('military time validator', () => {
 
 	describe('Military Time format: HH:MM - HH:MM', () => {
 		it.each(invalidFormatCases)('%s is an invalid format', (input) => {
+			expect(isMilitaryTime(input)).toBe(false);
+		});
+	});
+
+	describe('Hours are can not exceed 23', () => {
+		it.each(hoursOutOfRangeCases)('%s has hours out of range', (input) => {
 			expect(isMilitaryTime(input)).toBe(false);
 		});
 	});
