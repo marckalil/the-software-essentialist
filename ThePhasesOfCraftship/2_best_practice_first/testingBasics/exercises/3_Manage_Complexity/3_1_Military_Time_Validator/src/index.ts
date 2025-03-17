@@ -7,6 +7,10 @@ export function isMilitaryTime(input: string): boolean {
 	const [startTime, endTime] = input.split(' - ');
 	const startHour = startTime.split(':').map(Number)[0];
 	const endHour = endTime.split(':').map(Number)[0];
-	if (startHour > 23 || endHour > 23) return false;
+
+	const isStartHourOutOfRange = startHour > 23;
+	const isEndHourOutOfRange = endHour > 23;
+	if (isStartHourOutOfRange || isEndHourOutOfRange) return false;
+	
 	return true;
 }
