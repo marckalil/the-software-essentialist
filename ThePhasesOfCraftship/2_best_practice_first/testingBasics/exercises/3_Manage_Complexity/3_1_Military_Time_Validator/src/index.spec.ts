@@ -23,8 +23,18 @@
 - 00:00 - +2B:59
 */
 
+import { isMilitaryTime } from './index';
+
+const validCases: string[] = [
+	'00:00 - 23:59',
+	'01:12 - 14:32',
+	'22:00 - 23:12'
+];
 
 describe('military time validator', () => {
-
-
+	describe('valid cases', () => {
+		it.each(validCases)('%s is a valid Military Time', (input) => {
+			expect(isMilitaryTime(input)).toBe(true);
+		});
+	});
 })
