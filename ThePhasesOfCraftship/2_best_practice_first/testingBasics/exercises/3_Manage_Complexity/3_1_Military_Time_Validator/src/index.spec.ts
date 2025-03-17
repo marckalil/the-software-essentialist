@@ -32,7 +32,7 @@ const validCases: string[] = [
 ];
 
 describe('military time validator', () => {
-	describe('valid cases', () => {
+	describe('Valid cases', () => {
 		it.each(validCases)('%s is a valid Military Time', (input) => {
 			expect(isMilitaryTime(input)).toBe(true);
 		});

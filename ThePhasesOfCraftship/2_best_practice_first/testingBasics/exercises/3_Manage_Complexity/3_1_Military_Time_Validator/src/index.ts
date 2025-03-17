@@ -1,3 +1,3 @@
-export function isMilitaryTime(input: string) {
-	return;
+export function isMilitaryTime(input: string): boolean {
+	return true;
 }
