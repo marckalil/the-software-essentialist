@@ -31,10 +31,23 @@ const validCases: string[] = [
 	'22:00 - 23:12'
 ];
 
+const invalidFormatCases: string[] = [
+	'00:00 - 23:59:00',
+	'a0:00 - 23:59',
+	'-01:00 - 23:59',
+	'00:00 - +2B:59'
+];
+
 describe('military time validator', () => {
 	describe('Valid cases', () => {
 		it.each(validCases)('%s is a valid Military Time', (input) => {
 			expect(isMilitaryTime(input)).toBe(true);
+		});
+	});
+
+	describe('Military Time format: HH:MM - HH:MM', () => {
+		it.each(invalidFormatCases)('%s is an invalid format', (input) => {
+			expect(isMilitaryTime(input)).toBe(false);
 		});
 	});
 })
