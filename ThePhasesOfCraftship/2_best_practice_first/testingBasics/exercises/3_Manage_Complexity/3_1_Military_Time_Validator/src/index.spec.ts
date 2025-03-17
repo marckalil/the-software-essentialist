@@ -10,17 +10,17 @@
 - 22:00 - 23:12
 
 # Invalid Examples
+## Invalid format
+- 00:00 - 23:59:00
+- a0:00 - 23:59
+- -01:00 - 23:59
+- 00:00 - +2B:59
 ## Hours out of range
 - 24:00 - 23:59
 - 00:00 - 24:00
 ## Minutes out of range
 - 00:60 - 23:59
 - 00:00 - 23:60
-## Invalid format
-- 00:00 - 23:59:00
-- a0:00 - 23:59
-- -01:00 - 23:59
-- 00:00 - +2B:59
 */
 
 import { isMilitaryTime } from './index';
@@ -61,7 +61,7 @@ describe('military time validator', () => {
 		});
 	});
 
-	describe('Hours are can not exceed 23', () => {
+	describe('Hours can not exceed 23', () => {
 		it.each(hoursOutOfRangeCases)('%s has hours out of range', (input) => {
 			expect(isMilitaryTime(input)).toBe(false);
 		});
