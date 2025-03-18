@@ -55,10 +55,54 @@ function handleOrExpression(expression: string): string {
 		.replace(OrValues.TRUE_OR_FALSE, TRUE));
 }
 
-export function booleanCalculator(inputExpression: string): boolean {
-	let expression = handleNotExpression(inputExpression);
-	expression = handleAndExpression(expression);
-	expression = handleOrExpression(expression);
+function resolveExpression(expression: string): string {
+	let resolvedExpression = handleNotExpression(expression);
+	resolvedExpression = handleAndExpression(resolvedExpression);
+	resolvedExpression = handleOrExpression(resolvedExpression);
+	return resolvedExpression;
+}
 
-	return expression === TRUE;
+function resolveGroups(input: string): string {
+	const splitExpression = input.split(' ');
+	const groupedExpressions: string[] = [];
+	let groupedExpression = '';
+	let groupCount = 0;
+	
+	splitExpression.forEach((element) => {
+		if (element.startsWith('(')) {
+			groupedExpression += element + ' ';
+			groupCount++;
+		}
+		else if (element.endsWith(')')) {
+			groupedExpression += element;
+			groupedExpression = groupedExpression.replace('(', '').replace(')', '');
+			groupedExpression = resolveExpression(groupedExpression);
+			groupCount--;
+			if (groupCount === 0) {
+				groupedExpressions.push(groupedExpression);
+				groupedExpression = '';
+			}
+		}
+		else if (groupCount > 0) {
+			groupedExpression += element + ' ';
+		}
+		else {
+			groupedExpressions.push(element);
+		}
+	});
+
+	return groupedExpressions.join(' ');
+}
+
+/**
+ * This function calculates a boolean expression like 'TRUE AND FALSE' and returns the result.
+ * It can contain grouped expressions like '(FALSE OR TRUE) AND TRUE'
+ * @param expression: a string that represents a boolean expression
+ * @returns boolean value of the expression
+ */
+export function booleanCalculator(expression: string): boolean {
+	const expressionWithGroupsResolved: string = resolveGroups(expression);
+	const resolvedExpression = resolveExpression(expressionWithGroupsResolved);
+
+	return resolvedExpression === TRUE;
 };
