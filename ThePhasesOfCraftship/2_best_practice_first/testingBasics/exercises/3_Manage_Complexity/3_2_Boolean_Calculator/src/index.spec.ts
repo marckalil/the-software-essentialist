@@ -90,6 +90,7 @@ describe('boolean calculator', () => {
 				['NOT TRUE AND TRUE', false],
 				['TRUE AND NOT TRUE', false],
 				['NOT FALSE AND TRUE', true],
+				['TRUE AND NOT FALSE', true],
 			];
 			test.each(notWithAndCases)('%s returns %s', (expression, expectedResult) => {
 				expect(booleanCalculator(expression)).toBe(expectedResult);
