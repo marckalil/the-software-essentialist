@@ -47,37 +47,37 @@ describe('boolean calculator', () => {
 		});
 	});
 
-	describe('NOT operator', () => {
-		const notOperatorCases: TestCases = [
-			['NOT TRUE', false],
-			['NOT FALSE', true],
-		];
-		test.each(notOperatorCases)('%s returns %s', (expression, expectedResult) => {
-			expect(booleanCalculator(expression)).toBe(expectedResult);
+	describe('With only 1 operator', () => {
+		describe('NOT operator', () => {
+			const notOperatorCases: TestCases = [
+				['NOT TRUE', false],
+				['NOT FALSE', true],
+			];
+			test.each(notOperatorCases)('%s returns %s', (expression, expectedResult) => {
+				expect(booleanCalculator(expression)).toBe(expectedResult);
+			});
 		});
-	});
-
-	describe('AND operator', () => {
-		const andOperatorCases: TestCases = [
-			['TRUE AND TRUE', true],
-			['FALSE AND FALSE', false],
-			['TRUE AND FALSE', false],
-			['FALSE AND TRUE', false],
-		];
-		test.each(andOperatorCases)('%s returns %s', (expression, expectedResult) => {
-			expect(booleanCalculator(expression)).toBe(expectedResult);
+		describe('AND operator', () => {
+			const andOperatorCases: TestCases = [
+				['TRUE AND TRUE', true],
+				['FALSE AND FALSE', false],
+				['TRUE AND FALSE', false],
+				['FALSE AND TRUE', false],
+			];
+			test.each(andOperatorCases)('%s returns %s', (expression, expectedResult) => {
+				expect(booleanCalculator(expression)).toBe(expectedResult);
+			});
 		});
-	});
-
-	describe('OR operator', () => {
-		const orOperatorCases: TestCases = [
-			['TRUE OR TRUE', true],
-			['TRUE OR FALSE', true],
-			['FALSE OR TRUE', true],
-			['FALSE OR FALSE', false],
-		];
-		test.each(orOperatorCases)('%s returns %s', (expression, expectedResult) => {
-			expect(booleanCalculator(expression)).toBe(expectedResult);
+		describe('OR operator', () => {
+			const orOperatorCases: TestCases = [
+				['TRUE OR TRUE', true],
+				['TRUE OR FALSE', true],
+				['FALSE OR TRUE', true],
+				['FALSE OR FALSE', false],
+			];
+			test.each(orOperatorCases)('%s returns %s', (expression, expectedResult) => {
+				expect(booleanCalculator(expression)).toBe(expectedResult);
+			});
 		});
 	});
 })
