@@ -100,6 +100,14 @@ describe('boolean calculator', () => {
 					expect(booleanCalculator(expression)).toBe(expectedResult);
 				});
 			});
+			describe('NOT with OR', () => {
+				const notWithOrCases: TestCases = [
+					['NOT TRUE OR TRUE', true],
+				];
+				test.each(notWithOrCases)('%s returns %s', (expression, expectedResult) => {
+					expect(booleanCalculator(expression)).toBe(expectedResult);
+				});
+			});
 		});
 	});
 })
