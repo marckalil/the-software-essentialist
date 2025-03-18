@@ -15,6 +15,13 @@
  * Example: "(TRUE OR TRUE OR TRUE) AND FALSE" -> false
  */
 
+/**
+ * OPERATORS PRIORITIES
+ * 1 - NOT
+ * 2 - AND
+ * 3 - OR
+*/
+
 describe('boolean calculator', () => {
 
 })
