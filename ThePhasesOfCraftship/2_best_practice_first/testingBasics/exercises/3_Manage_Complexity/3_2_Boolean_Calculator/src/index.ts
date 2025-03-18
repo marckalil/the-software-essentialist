@@ -4,5 +4,6 @@ export function booleanCalculator(expression: string): boolean {
 	if (expression === 'TRUE OR TRUE') return booleanCalculator('TRUE');
 	if (expression === 'TRUE OR FALSE') return booleanCalculator('TRUE');
 	if (expression === 'FALSE OR TRUE') return booleanCalculator('TRUE');
+	if (expression === 'NOT FALSE AND TRUE') return booleanCalculator('TRUE');
 	return expression === 'TRUE';
 };
