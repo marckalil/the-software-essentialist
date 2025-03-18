@@ -1,6 +1,11 @@
 const FALSE = 'FALSE';
 const TRUE = 'TRUE';
 
+const NotValues = {
+	'NOT_FALSE': 'NOT FALSE',
+	'NOT_TRUE': 'NOT TRUE',
+} as const;
+
 const AndValues = {
 	'FALSE_AND_FALSE': 'FALSE AND FALSE',
 	'FALSE_AND_TRUE': 'FALSE AND TRUE',
@@ -9,7 +14,7 @@ const AndValues = {
 } as const;
 
 function handleNotExpression(expression: string): string {
-	return expression.replace('NOT FALSE', 'TRUE').replace('NOT TRUE', 'FALSE');
+	return expression.replace(NotValues.NOT_FALSE, TRUE).replace(NotValues.NOT_TRUE, FALSE);
 }
 
 function handleAndExpression(expression: string): string {
