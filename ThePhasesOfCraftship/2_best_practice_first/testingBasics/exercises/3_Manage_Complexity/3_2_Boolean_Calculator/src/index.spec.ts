@@ -26,7 +26,7 @@
  * STEPS:
  * [X] - Simple values: TRUE->true, FALSE->false
  * [X] - NOT: NOT TRUE -> false, NOT FALSE -> true
- * [] - AND: TRUE AND TRUE -> true, TRUE AND FALSE -> false, FALSE AND TRUE -> false, FALSE AND FALSE -> false
+ * [X] - AND: TRUE AND TRUE -> true, TRUE AND FALSE -> false, FALSE AND TRUE -> false, FALSE AND FALSE -> false
  * [] - OR: TRUE OR TRUE -> true, TRUE OR FALSE -> true, FALSE OR TRUE -> true, FALSE OR FALSE -> false
  * [] - Multiple operators: TRUE AND FALSE OR TRUE -> true
  * [] - Parentheses: (TRUE AND FALSE) OR TRUE -> true
@@ -34,9 +34,11 @@
 
 import { booleanCalculator } from './index';
 
+type TestCases = [expression: string, expectedResult: boolean][];
+
 describe('boolean calculator', () => {
 	describe('Simple values', () => {
-		const simpleValueCases: [expression: string, expectedResult: boolean][] = [
+		const simpleValueCases: TestCases = [
 			['TRUE', true],
 			['FALSE', false],
 		];
@@ -46,7 +48,7 @@ describe('boolean calculator', () => {
 	});
 
 	describe('NOT operator', () => {
-		const notOperatorCases: [expression: string, expectedResult: boolean][] = [
+		const notOperatorCases: TestCases = [
 			['NOT TRUE', false],
 			['NOT FALSE', true],
 		];
@@ -54,18 +56,16 @@ describe('boolean calculator', () => {
 			expect(booleanCalculator(expression)).toBe(expectedResult);
 		});
 	});
+
 	describe('AND operator', () => {
-		test('TRUE AND TRUE returns true', () => {
-			expect(booleanCalculator('TRUE AND TRUE')).toBe(true);
-		});
-		test('TRUE AND FALSE returns false', () => {
-			expect(booleanCalculator('TRUE AND FALSE')).toBe(false);
-		});
-		test('FALSE AND TRUE returns false', () => {
-			expect(booleanCalculator('FALSE AND TRUE')).toBe(false);
-		});
-		test('FALSE AND FALSE returns false', () => {
-			expect(booleanCalculator('FALSE AND FALSE')).toBe(false);
+		const andOperatorCases: TestCases = [
+			['TRUE AND TRUE', true],
+			['FALSE AND FALSE', false],
+			['TRUE AND FALSE', false],
+			['FALSE AND TRUE', false],
+		];
+		test.each(andOperatorCases)('%s returns %s', (expression, expectedResult) => {
+			expect(booleanCalculator(expression)).toBe(expectedResult);
 		});
 	});
 })
