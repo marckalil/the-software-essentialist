@@ -151,6 +151,7 @@ describe('boolean calculator', () => {
 			['(FALSE OR TRUE) AND TRUE', true],
 			['(TRUE OR TRUE OR TRUE) AND FALSE' , false],
 			['NOT (TRUE AND TRUE)', false],
+			['NOT (FALSE AND FALSE)', true],
 		]
 		test.each(groupedExpressionCases)('%s returns %s', (expression, expectedResult) => {
 			expect(booleanCalculator(expression)).toBe(expectedResult);
