@@ -25,7 +25,7 @@
 /**
  * STEPS:
  * [X] - Simple values: TRUE->true, FALSE->false
- * [] - NOT: NOT TRUE -> false, NOT FALSE -> true
+ * [X] - NOT: NOT TRUE -> false, NOT FALSE -> true
  * [] - AND: TRUE AND TRUE -> true, TRUE AND FALSE -> false, FALSE AND TRUE -> false, FALSE AND FALSE -> false
  * [] - OR: TRUE OR TRUE -> true, TRUE OR FALSE -> true, FALSE OR TRUE -> true, FALSE OR FALSE -> false
  * [] - Multiple operators: TRUE AND FALSE OR TRUE -> true
@@ -46,11 +46,12 @@ describe('boolean calculator', () => {
 	});
 
 	describe('NOT operator', () => {
-		test('NOT TRUE returns false', () => {
-			expect(booleanCalculator('NOT TRUE')).toBe(false);
-		});
-		test('NOT FALSE returns true', () => {
-			expect(booleanCalculator('NOT FALSE')).toBe(true);
+		const notOperatorCases: [expression: string, expectedResult: boolean][] = [
+			['NOT TRUE', false],
+			['NOT FALSE', true],
+		];
+		test.each(notOperatorCases)('%s returns %s', (expression, expectedResult) => {
+			expect(booleanCalculator(expression)).toBe(expectedResult);
 		});
 	});
 })
