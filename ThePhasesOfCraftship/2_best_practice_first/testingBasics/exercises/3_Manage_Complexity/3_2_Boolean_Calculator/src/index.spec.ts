@@ -32,7 +32,7 @@
  * 	[X] - NOT is evaluated first: NOT TRUE AND TRUE -> false
  *  [X] - AND is evaluated second: TRUE AND FALSE OR TRUE -> true
  *  [X] - OR is evaluated last: TRUE AND FALSE OR TRUE -> true
- * [] - Parentheses: (TRUE AND FALSE) OR TRUE -> true
+ * [X] - With groups: (TRUE AND FALSE) OR TRUE -> true
 */
 
 import { booleanCalculator } from './index';

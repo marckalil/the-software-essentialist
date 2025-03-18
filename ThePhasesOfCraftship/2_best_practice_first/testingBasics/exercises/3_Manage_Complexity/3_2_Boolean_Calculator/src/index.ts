@@ -66,30 +66,35 @@ function resolveGroups(input: string): string {
 	const splitExpression = input.split(' ');
 	const groupedExpressions: string[] = [];
 	let groupedExpression = '';
-	let groupCount = 0;
-	
-	splitExpression.forEach((element) => {
-		if (element.startsWith('(')) {
+	let isGroupOpen = false;
+
+	for (const element of splitExpression) {
+		const isElementOpeningGroup = element.startsWith('(');
+		if (isElementOpeningGroup) {
 			groupedExpression += element + ' ';
-			groupCount++;
+			isGroupOpen = true;
+			continue;
 		}
-		else if (element.endsWith(')')) {
+
+		const isElementClosingGroup = element.endsWith(')');
+		if (isElementClosingGroup) {
 			groupedExpression += element;
-			groupedExpression = groupedExpression.replace('(', '').replace(')', '');
-			groupedExpression = resolveExpression(groupedExpression);
-			groupCount--;
-			if (groupCount === 0) {
-				groupedExpressions.push(groupedExpression);
-				groupedExpression = '';
-			}
+			const trimmedExpression = groupedExpression.replace('(', '').replace(')', '');
+			const resolvedGroup = resolveExpression(trimmedExpression);
+			groupedExpressions.push(resolvedGroup);
+			groupedExpression = '';
+			isGroupOpen = false;
+			continue;
 		}
-		else if (groupCount > 0) {
+
+		const shouldAddElementToGroup = isGroupOpen;
+		if (shouldAddElementToGroup) {
 			groupedExpression += element + ' ';
+			continue;
 		}
-		else {
-			groupedExpressions.push(element);
-		}
-	});
+
+		groupedExpressions.push(element);
+	}
 
 	return groupedExpressions.join(' ');
 }
