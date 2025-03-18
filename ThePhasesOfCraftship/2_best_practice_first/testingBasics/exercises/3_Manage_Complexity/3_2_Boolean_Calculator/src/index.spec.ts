@@ -54,4 +54,9 @@ describe('boolean calculator', () => {
 			expect(booleanCalculator(expression)).toBe(expectedResult);
 		});
 	});
+	describe('AND operator', () => {
+		test('TRUE AND TRUE returns true', () => {
+			expect(booleanCalculator('TRUE AND TRUE')).toBe(true);
+		});
+	});
 })
