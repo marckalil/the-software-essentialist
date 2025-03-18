@@ -76,5 +76,8 @@ describe('boolean calculator', () => {
 		test('TRUE OR FALSE returns true', () => {
 			expect(booleanCalculator('TRUE OR FALSE')).toBe(true);
 		});
+		test('FALSE OR TRUE returns true', () => {
+			expect(booleanCalculator('FALSE OR TRUE')).toBe(true);
+		});
 	});
 })
