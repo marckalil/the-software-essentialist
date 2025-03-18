@@ -88,6 +88,7 @@ describe('boolean calculator', () => {
 		describe('NOT is evaluated first', () => {
 			const notFirstCases: TestCases = [
 				['NOT TRUE AND TRUE', false],
+				['TRUE AND NOT TRUE', false],
 			];
 			test.each(notFirstCases)('%s returns %s', (expression, expectedResult) => {
 				expect(booleanCalculator(expression)).toBe(expectedResult);
