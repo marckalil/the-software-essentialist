@@ -40,8 +40,14 @@ describe('boolean calculator', () => {
 			['TRUE', true],
 			['FALSE', false],
 		];
-		it.each(simpleValueCases)('%s returns %s', (expression, expectedResult) => {
+		test.each(simpleValueCases)('%s returns %s', (expression, expectedResult) => {
 			expect(booleanCalculator(expression)).toBe(expectedResult);
+		});
+	});
+
+	describe('NOT operator', () => {
+		test('NOT TRUE returns false', () => {
+			expect(booleanCalculator('NOT TRUE')).toBe(false);
 		});
 	});
 })
