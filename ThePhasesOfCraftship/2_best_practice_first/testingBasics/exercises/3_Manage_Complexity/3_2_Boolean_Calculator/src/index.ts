@@ -1,7 +1,8 @@
-export function booleanCalculator(expression: string): boolean {
-	if (expression.includes('NOT FALSE')) {
-		return booleanCalculator(expression.replace('NOT FALSE', 'TRUE'));
-	}
+function handleNotExpression(expression: string): string {
+	return expression.replace('NOT FALSE', 'TRUE').replace('NOT TRUE', 'FALSE');
+}
+export function booleanCalculator(inputExpression: string): boolean {
+	let expression = handleNotExpression(inputExpression);
 	if (expression.includes('AND')) {
 		const [left, right] = expression.split(' AND ');
 		return booleanCalculator(left) && booleanCalculator(right);
