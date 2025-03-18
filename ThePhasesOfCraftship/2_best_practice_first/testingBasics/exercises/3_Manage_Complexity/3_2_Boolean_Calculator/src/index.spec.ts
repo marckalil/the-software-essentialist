@@ -22,6 +22,16 @@
  * 3 - OR
 */
 
+/**
+ * STEPS:
+ * [] - Simple values: TRUE->true, FALSE->false
+ * [] - NOT: NOT TRUE -> false, NOT FALSE -> true
+ * [] - AND: TRUE AND TRUE -> true, TRUE AND FALSE -> false, FALSE AND TRUE -> false, FALSE AND FALSE -> false
+ * [] - OR: TRUE OR TRUE -> true, TRUE OR FALSE -> true, FALSE OR TRUE -> true, FALSE OR FALSE -> false
+ * [] - Multiple operators: TRUE AND FALSE OR TRUE -> true
+ * [] - Parentheses: (TRUE AND FALSE) OR TRUE -> true
+*/
+
 describe('boolean calculator', () => {
 
 })
