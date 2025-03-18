@@ -86,11 +86,12 @@ describe('boolean calculator', () => {
 
 	describe('With multiple operators', () => {
 		describe('NOT is evaluated first', () => {
-			const notFirstCases: TestCases = [
+			const notWithAndCases: TestCases = [
 				['NOT TRUE AND TRUE', false],
 				['TRUE AND NOT TRUE', false],
+				['NOT FALSE AND TRUE', true],
 			];
-			test.each(notFirstCases)('%s returns %s', (expression, expectedResult) => {
+			test.each(notWithAndCases)('%s returns %s', (expression, expectedResult) => {
 				expect(booleanCalculator(expression)).toBe(expectedResult);
 			});
 		});
