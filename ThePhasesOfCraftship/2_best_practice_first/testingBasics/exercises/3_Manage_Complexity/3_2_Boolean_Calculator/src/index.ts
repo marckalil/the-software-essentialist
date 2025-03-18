@@ -13,6 +13,13 @@ const AndValues = {
 	'TRUE_AND_TRUE': 'TRUE AND TRUE',
 } as const;
 
+const OrValues = {
+	'FALSE_OR_FALSE': 'FALSE OR FALSE',
+	'FALSE_OR_TRUE': 'FALSE OR TRUE',
+	'TRUE_OR_FALSE': 'TRUE OR FALSE',
+	'TRUE_OR_TRUE': 'TRUE OR TRUE',
+} as const;
+
 function handleNotExpression(expression: string): string {
 	return expression.replace(NotValues.NOT_FALSE, TRUE).replace(NotValues.NOT_TRUE, FALSE);
 }
@@ -37,11 +44,21 @@ function handleAndExpression(expression: string): string {
 		}
 	}
 
+function handleOrExpression(expression: string): string {
+	const splitExpression = expression.split(' OR ');
+	if (splitExpression.length === 1) return expression;
+	if (splitExpression.length === 2) return splitExpression.includes(TRUE) ? TRUE : FALSE;
+	return handleOrExpression(expression
+		.replace(OrValues.TRUE_OR_TRUE, TRUE)
+		.replace(OrValues.FALSE_OR_FALSE, FALSE)
+		.replace(OrValues.FALSE_OR_TRUE, TRUE)
+		.replace(OrValues.TRUE_OR_FALSE, TRUE));
+}
+
 export function booleanCalculator(inputExpression: string): boolean {
 	let expression = handleNotExpression(inputExpression);
 	expression = handleAndExpression(expression);
-	if (expression === 'TRUE OR TRUE') return booleanCalculator('TRUE');
-	if (expression === 'TRUE OR FALSE') return booleanCalculator('TRUE');
-	if (expression === 'FALSE OR TRUE') return booleanCalculator('TRUE');
-	return expression === 'TRUE';
+	expression = handleOrExpression(expression);
+
+	return expression === TRUE;
 };
