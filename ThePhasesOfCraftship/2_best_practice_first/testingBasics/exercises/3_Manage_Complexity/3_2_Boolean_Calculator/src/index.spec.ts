@@ -149,6 +149,7 @@ describe('boolean calculator', () => {
 	describe('With grouped expressions', () => {
 		const groupedExpressionCases: TestCases = [
 			['(FALSE OR TRUE) AND TRUE', true],
+			['(TRUE OR TRUE OR TRUE) AND FALSE' , false],
 		]
 		test.each(groupedExpressionCases)('%s returns %s', (expression, expectedResult) => {
 			expect(booleanCalculator(expression)).toBe(expectedResult);
