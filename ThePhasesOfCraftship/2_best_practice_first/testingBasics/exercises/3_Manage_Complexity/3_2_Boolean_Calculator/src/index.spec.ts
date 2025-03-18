@@ -128,5 +128,21 @@ describe('boolean calculator', () => {
 				expect(booleanCalculator(expression)).toBe(expectedResult);
 			});
 		});
+		describe('With NOT, AND and OR', () => {
+			const notAndOrCases: TestCases = [
+				['NOT TRUE AND FALSE OR TRUE', true],
+				['TRUE AND NOT FALSE OR TRUE', true],
+				['TRUE OR FALSE AND NOT TRUE', true],
+				['FALSE OR TRUE AND NOT FALSE', true],
+				['FALSE AND TRUE OR NOT FALSE', true],
+				['TRUE OR NOT TRUE AND FALSE', true],
+				['TRUE AND FALSE OR NOT TRUE', false],
+				['FALSE OR TRUE AND NOT TRUE', false],
+				['FALSE AND TRUE OR NOT FALSE', true],
+			];
+			test.each(notAndOrCases)('%s returns %s', (expression, expectedResult) => {
+				expect(booleanCalculator(expression)).toBe(expectedResult);
+			});
+		});
 	});
 })
