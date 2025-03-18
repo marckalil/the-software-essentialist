@@ -25,14 +25,23 @@ function handleNotExpression(expression: string): string {
 }
 
 function handleAndExpression(expression: string): string {
-	const splitExpression = expression.split(' AND ');
-	if (splitExpression.length === 1) return expression;
-	if (splitExpression.length === 2) return splitExpression.includes(FALSE) ? FALSE : TRUE;
-	return handleAndExpression(expression
-		.replace(AndValues.TRUE_AND_TRUE, TRUE)
-		.replace(AndValues.FALSE_AND_FALSE, FALSE)
-		.replace(AndValues.FALSE_AND_TRUE, FALSE)
-		.replace(AndValues.TRUE_AND_FALSE, FALSE));
+	if (!expression.includes(' AND ')) return expression;
+	switch (expression) {
+		case AndValues.FALSE_AND_FALSE:
+			return FALSE;
+		case AndValues.FALSE_AND_TRUE:
+			return FALSE;
+		case AndValues.TRUE_AND_FALSE:
+			return FALSE;
+		case AndValues.TRUE_AND_TRUE:
+			return TRUE;
+	default:
+		return handleAndExpression(expression
+			.replace(AndValues.TRUE_AND_TRUE, TRUE)
+			.replace(AndValues.FALSE_AND_FALSE, FALSE)
+			.replace(AndValues.FALSE_AND_TRUE, FALSE)
+			.replace(AndValues.TRUE_AND_FALSE, FALSE));
+	}
 }
 
 function handleOrExpression(expression: string): string {
