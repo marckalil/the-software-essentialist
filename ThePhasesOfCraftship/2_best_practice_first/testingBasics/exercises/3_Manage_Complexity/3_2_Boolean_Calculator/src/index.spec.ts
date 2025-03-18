@@ -29,6 +29,9 @@
  * [X] - AND: TRUE AND TRUE -> true, TRUE AND FALSE -> false, FALSE AND TRUE -> false, FALSE AND FALSE -> false
  * [X] - OR: TRUE OR TRUE -> true, TRUE OR FALSE -> true, FALSE OR TRUE -> true, FALSE OR FALSE -> false
  * [] - Multiple operators: TRUE AND FALSE OR TRUE -> true
+ * 	[] - NOT is evaluated first: NOT TRUE AND TRUE -> false
+ *  [] - AND is evaluated second: TRUE AND FALSE OR TRUE -> true
+ *  [] - OR is evaluated last: TRUE AND FALSE OR TRUE -> true
  * [] - Parentheses: (TRUE AND FALSE) OR TRUE -> true
 */
 
@@ -76,6 +79,17 @@ describe('boolean calculator', () => {
 				['FALSE OR FALSE', false],
 			];
 			test.each(orOperatorCases)('%s returns %s', (expression, expectedResult) => {
+				expect(booleanCalculator(expression)).toBe(expectedResult);
+			});
+		});
+	});
+
+	describe('With multiple operators', () => {
+		describe('NOT is evaluated first', () => {
+			const notFirstCases: TestCases = [
+				['NOT TRUE AND TRUE', false],
+			];
+			test.each(notFirstCases)('%s returns %s', (expression, expectedResult) => {
 				expect(booleanCalculator(expression)).toBe(expectedResult);
 			});
 		});
