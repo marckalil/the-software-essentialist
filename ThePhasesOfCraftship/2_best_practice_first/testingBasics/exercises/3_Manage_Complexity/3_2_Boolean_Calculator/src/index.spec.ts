@@ -64,5 +64,8 @@ describe('boolean calculator', () => {
 		test('FALSE AND TRUE returns false', () => {
 			expect(booleanCalculator('FALSE AND TRUE')).toBe(false);
 		});
+		test('FALSE AND FALSE returns false', () => {
+			expect(booleanCalculator('FALSE AND FALSE')).toBe(false);
+		});
 	});
 })
