@@ -68,4 +68,10 @@ describe('boolean calculator', () => {
 			expect(booleanCalculator(expression)).toBe(expectedResult);
 		});
 	});
+
+	describe('OR operator', () => {
+		test('TRUE OR TRUE returns true', () => {
+			expect(booleanCalculator('TRUE OR TRUE')).toBe(true);
+		});
+	});
 })
