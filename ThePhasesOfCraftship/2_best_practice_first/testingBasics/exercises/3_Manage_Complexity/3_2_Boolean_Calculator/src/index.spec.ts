@@ -28,10 +28,10 @@
  * [X] - NOT: NOT TRUE -> false, NOT FALSE -> true
  * [X] - AND: TRUE AND TRUE -> true, TRUE AND FALSE -> false, FALSE AND TRUE -> false, FALSE AND FALSE -> false
  * [X] - OR: TRUE OR TRUE -> true, TRUE OR FALSE -> true, FALSE OR TRUE -> true, FALSE OR FALSE -> false
- * [] - Multiple operators: TRUE AND FALSE OR TRUE -> true
- * 	[] - NOT is evaluated first: NOT TRUE AND TRUE -> false
- *  [] - AND is evaluated second: TRUE AND FALSE OR TRUE -> true
- *  [] - OR is evaluated last: TRUE AND FALSE OR TRUE -> true
+ * [X] - Multiple operators: TRUE AND FALSE OR TRUE -> true
+ * 	[X] - NOT is evaluated first: NOT TRUE AND TRUE -> false
+ *  [X] - AND is evaluated second: TRUE AND FALSE OR TRUE -> true
+ *  [X] - OR is evaluated last: TRUE AND FALSE OR TRUE -> true
  * [] - Parentheses: (TRUE AND FALSE) OR TRUE -> true
 */
 
@@ -143,6 +143,15 @@ describe('boolean calculator', () => {
 			test.each(notAndOrCases)('%s returns %s', (expression, expectedResult) => {
 				expect(booleanCalculator(expression)).toBe(expectedResult);
 			});
+		});
+	});
+
+	describe('With grouped expressions', () => {
+		const groupedExpressionCases: TestCases = [
+			['(FALSE OR TRUE) AND TRUE', true],
+		]
+		test.each(groupedExpressionCases)('%s returns %s', (expression, expectedResult) => {
+			expect(booleanCalculator(expression)).toBe(expectedResult);
 		});
 	});
 })
