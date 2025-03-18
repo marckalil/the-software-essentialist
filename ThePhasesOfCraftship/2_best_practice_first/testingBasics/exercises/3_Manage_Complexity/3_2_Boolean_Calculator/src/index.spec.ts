@@ -85,7 +85,7 @@ describe('boolean calculator', () => {
 	});
 
 	describe('With multiple operators', () => {
-		describe('NOT is evaluated first', () => {
+		describe('NOT is evaluated before AND or OR', () => {
 			describe('NOT with AND', () => {
 				const notWithAndCases: TestCases = [
 					['NOT TRUE AND TRUE', false],
@@ -113,6 +113,19 @@ describe('boolean calculator', () => {
 				test.each(notWithOrCases)('%s returns %s', (expression, expectedResult) => {
 					expect(booleanCalculator(expression)).toBe(expectedResult);
 				});
+			});
+		});
+		describe('AND is evaluated before OR', () => {
+			const andBeforeOrCases: TestCases = [
+				['TRUE AND FALSE OR TRUE', true],
+				['TRUE OR FALSE AND TRUE', true],
+				['TRUE AND TRUE OR FALSE', true],
+				['FALSE OR TRUE AND TRUE', true],
+				['FALSE AND FALSE OR TRUE', true],
+				['FALSE OR TRUE AND FALSE', false],
+			];
+			test.each(andBeforeOrCases)('%s returns %s', (expression, expectedResult) => {
+				expect(booleanCalculator(expression)).toBe(expectedResult);
 			});
 		});
 	});
