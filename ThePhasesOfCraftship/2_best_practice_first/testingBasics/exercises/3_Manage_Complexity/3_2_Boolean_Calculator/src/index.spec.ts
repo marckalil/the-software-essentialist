@@ -27,7 +27,7 @@
  * [X] - Simple values: TRUE->true, FALSE->false
  * [X] - NOT: NOT TRUE -> false, NOT FALSE -> true
  * [X] - AND: TRUE AND TRUE -> true, TRUE AND FALSE -> false, FALSE AND TRUE -> false, FALSE AND FALSE -> false
- * [] - OR: TRUE OR TRUE -> true, TRUE OR FALSE -> true, FALSE OR TRUE -> true, FALSE OR FALSE -> false
+ * [X] - OR: TRUE OR TRUE -> true, TRUE OR FALSE -> true, FALSE OR TRUE -> true, FALSE OR FALSE -> false
  * [] - Multiple operators: TRUE AND FALSE OR TRUE -> true
  * [] - Parentheses: (TRUE AND FALSE) OR TRUE -> true
 */
@@ -70,17 +70,14 @@ describe('boolean calculator', () => {
 	});
 
 	describe('OR operator', () => {
-		test('TRUE OR TRUE returns true', () => {
-			expect(booleanCalculator('TRUE OR TRUE')).toBe(true);
-		});
-		test('TRUE OR FALSE returns true', () => {
-			expect(booleanCalculator('TRUE OR FALSE')).toBe(true);
-		});
-		test('FALSE OR TRUE returns true', () => {
-			expect(booleanCalculator('FALSE OR TRUE')).toBe(true);
-		});
-		test('FALSE OR FALSE returns false', () => {
-			expect(booleanCalculator('FALSE OR FALSE')).toBe(false);
+		const orOperatorCases: TestCases = [
+			['TRUE OR TRUE', true],
+			['TRUE OR FALSE', true],
+			['FALSE OR TRUE', true],
+			['FALSE OR FALSE', false],
+		];
+		test.each(orOperatorCases)('%s returns %s', (expression, expectedResult) => {
+			expect(booleanCalculator(expression)).toBe(expectedResult);
 		});
 	});
 })
