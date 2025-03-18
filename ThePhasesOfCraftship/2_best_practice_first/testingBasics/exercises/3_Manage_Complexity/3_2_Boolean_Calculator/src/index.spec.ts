@@ -32,6 +32,16 @@
  * [] - Parentheses: (TRUE AND FALSE) OR TRUE -> true
 */
 
-describe('boolean calculator', () => {
+import { booleanCalculator } from './index';
 
+describe('boolean calculator', () => {
+	describe('Simple values', () => {
+		const simpleValueCases: [expression: string, expectedResult: boolean][] = [
+			['TRUE', true],
+			['FALSE', false],
+		];
+		it.each(simpleValueCases)('%s returns %s', (expression, expectedResult) => {
+			expect(booleanCalculator(expression)).toBe(expectedResult);
+		});
+	});
 })
