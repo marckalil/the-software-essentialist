@@ -78,15 +78,107 @@ app.get('/student/:id/assignments', getStudentSubmittedAssignmentsController);
 app.get('/student/:id/grades', getStudentGradesController);
 
 /** ============= DTOs ============= */
+class InvalidRequestBodyException extends Error {
+    constructor(missingKeys: string[]) {
+        super("Body is missing required key: " + missingKeys.join(", "));
+    }
+}
+class CreateStudentDTO{
+    constructor(public name: string) {}
+    static fromRequestBody(body: unknown): CreateStudentDTO {
+        const requiredKeys = ['name'];
+        const isRequestInvalid = !body || typeof body !== 'object' || isMissingKeys(body, requiredKeys);
+
+        if (isRequestInvalid) throw new InvalidRequestBodyException(requiredKeys);
+
+        const { name } = body as { name: string };
+        return new CreateStudentDTO(name);
+    }
+}
+
+class CreateClassDTO {
+    constructor(public name: string) {}
+    static fromRequestBody(body: unknown): CreateClassDTO {
+        const requiredKeys = ['name'];
+        const isRequestInvalid = !body || typeof body !== 'object' || isMissingKeys(body, requiredKeys);
+
+        if (isRequestInvalid) throw new InvalidRequestBodyException(requiredKeys);
+
+        const { name } = body as { name: string };
+        return new CreateClassDTO(name);
+    }
+}
+
+class AssignStudentToClassDTO {
+    constructor(public studentId: string, public classId: string) {}
+    static fromRequestBody(body: unknown): AssignStudentToClassDTO {
+        const requiredKeys = ['studentId', 'classId'];
+        const isRequestInvalid = !body || typeof body !== 'object' || isMissingKeys(body, requiredKeys);
+
+        if (isRequestInvalid) throw new InvalidRequestBodyException(requiredKeys);
+
+        const { studentId, classId } = body as { studentId: string; classId: string };
+        return new AssignStudentToClassDTO(studentId, classId);
+    }
+}
+
+class CreateAssignmentDTO {
+    constructor(public classId: string, public title: string) {}
+    static fromRequestBody(body: unknown): CreateAssignmentDTO {
+        const requiredKeys = ['classId', 'title'];
+        const isRequestInvalid = !body || typeof body !== 'object' || isMissingKeys(body, requiredKeys);
+
+        if (isRequestInvalid) throw new InvalidRequestBodyException(requiredKeys);
+
+        const { classId, title } = body as { classId: string; title: string };
+        return new CreateAssignmentDTO(classId, title);
+    }
+}
+
+class AssignStudentToAssignmentDTO {
+    constructor(public studentId: string, public assignmentId: string) {}
+    static fromRequestBody(body: unknown): AssignStudentToAssignmentDTO {
+        const requiredKeys = ['studentId', 'assignmentId'];
+        const isRequestInvalid = !body || typeof body !== 'object' || isMissingKeys(body, requiredKeys);
+
+        if (isRequestInvalid) throw new InvalidRequestBodyException(requiredKeys);
+
+        const { studentId, assignmentId } = body as { studentId: string; assignmentId: string };
+        return new AssignStudentToAssignmentDTO(studentId, assignmentId);
+    }
+}
+
+class SubmitStudentAssignmentDTO {
+    constructor(public id: string) {}
+    static fromRequestBody(body: unknown): SubmitStudentAssignmentDTO {
+        const requiredKeys = ['id'];
+
+        const isRequestInvalid = !body || typeof body !== 'object' || isMissingKeys(body, requiredKeys);
+
+        if (isRequestInvalid) throw new InvalidRequestBodyException(requiredKeys);
+        const { id } = body as { id: string };
+        return new SubmitStudentAssignmentDTO(id);
+    }
+}
+
+class GradeStudentAssignmentDTO {
+    constructor(public id: string, public grade: string) {}
+    static fromRequestBody(body: unknown): GradeStudentAssignmentDTO {
+        const requiredKeys = ['id', 'grade'];
+
+        const isRequestInvalid = !body || typeof body !== 'object' || isMissingKeys(body, requiredKeys);
+
+        if (isRequestInvalid) throw new InvalidRequestBodyException(requiredKeys);
+        const { id, grade } = body as { id: string; grade: string };
+        return new GradeStudentAssignmentDTO(id, grade);
+    }
+}
+
 /** ============= CONTROLLERS ============= */
 async function createStudentController(req: Request, res: Response) {
 	try {
-		if (isMissingKeys(req.body, ['name'])) {
-			return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-		}
-
-		const { name } = req.body;
-
+        const dto = CreateStudentDTO.fromRequestBody(req.body);
+        const { name } = dto;
 		const student = await prisma.student.create({
 			data: {
 				name
@@ -101,11 +193,8 @@ async function createStudentController(req: Request, res: Response) {
 
 async function createClassController(req: Request, res: Response) {
     try {
-        if (isMissingKeys(req.body, ['name'])) {
-            return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-        }
-    
-        const { name } = req.body;
+       const dto = CreateClassDTO.fromRequestBody(req.body);
+       const { name } = dto;
     
         const cls = await prisma.class.create({
             data: {
@@ -121,11 +210,8 @@ async function createClassController(req: Request, res: Response) {
 
 async function assignStudentToClassController(req: Request, res: Response) {
     try {
-        if (isMissingKeys(req.body, ['studentId', 'classId'])) {
-            return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-        }
-    
-        const { studentId, classId } = req.body;
+        const dto = AssignStudentToClassDTO.fromRequestBody(req.body);
+        const { studentId, classId } = dto;
     
         // check if student exists
         const student = await prisma.student.findUnique({
@@ -177,11 +263,8 @@ async function assignStudentToClassController(req: Request, res: Response) {
 
 async function createAssignmentController(req: Request, res: Response) {
     try {
-        if (isMissingKeys(req.body, ['classId', 'title'])) {
-            return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-        }
-    
-        const { classId, title } = req.body;
+        const dto = CreateAssignmentDTO.fromRequestBody(req.body);
+        const { classId, title } = dto;
     
         const assignment = await prisma.assignment.create({
             data: {
@@ -198,11 +281,8 @@ async function createAssignmentController(req: Request, res: Response) {
 
 async function assignStudentToAssignmentController(req: Request, res: Response) {
     try {
-        if (isMissingKeys(req.body, ['studentId', 'assignmentId'])) {
-            return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-        }
-    
-        const { studentId, assignmentId, grade } = req.body;
+        const dto = AssignStudentToAssignmentDTO.fromRequestBody(req.body);
+        const { studentId, assignmentId } = dto;
     
         // check if student exists
         const student = await prisma.student.findUnique({
@@ -241,11 +321,8 @@ async function assignStudentToAssignmentController(req: Request, res: Response) 
 
 async function submitStudentAssignmentController(req: Request, res: Response) {
 	try {
-		if (isMissingKeys(req.body, ['id'])) {
-			return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-		}
-
-		const { id } = req.body;
+		const dto = SubmitStudentAssignmentDTO.fromRequestBody(req.body);
+        const { id } = dto;
 		
 		// check if student assignment exists
 		const studentAssignment = await prisma.studentAssignment.findUnique({
@@ -275,12 +352,8 @@ async function submitStudentAssignmentController(req: Request, res: Response) {
 
 async function gradeStudentAssignmentController(req: Request, res: Response) {
     try {
-
-        if (isMissingKeys(req.body, ['id', 'grade'])) {
-            return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-        }
-    
-        const { id, grade } = req.body;
+        const dto = GradeStudentAssignmentDTO.fromRequestBody(req.body);
+        const { id, grade } = dto;
     
         // validate grade
         if (!['A', 'B', 'C', 'D'].includes(grade)) {
