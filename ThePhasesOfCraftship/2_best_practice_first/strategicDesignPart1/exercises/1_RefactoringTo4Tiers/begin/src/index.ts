@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { prisma } from './database';
 import { Student, Class, Assignment, StudentAssignment } from '@prisma/client';
 import { error } from 'console';
+import { get } from 'http';
 const cors = require('cors');
 const app = express();
 app.use(express.json());
@@ -36,7 +37,49 @@ function isUUID (id: string) {
 // API Endpoints
 
 // POST student created
-app.post('/students', async (req: Request, res: Response) => {
+app.post('/students', createStudentController);
+
+// POST class created
+app.post('/classes', createClassController);
+
+// POST student assigned to class
+app.post('/class-enrollments', assignStudentToClassController);
+
+// POST assignment created
+app.post('/assignments', createAssignmentController);
+
+
+// POST student assigned to assignment
+app.post('/student-assignments', assignStudentToAssignmentController);
+
+// POST student submitted assignment
+app.post('/student-assignments/submit', submitStudentAssignmentController);
+
+// POST student assignment graded
+app.post('/student-assignments/grade', gradeStudentAssignmentController);
+
+
+// GET all students
+app.get('/students', getAllStudentsController);
+
+// GET a student by id
+app.get('/students/:id', getStudentController);
+
+// GET assignment by id
+app.get('/assignments/:id', getAssignmentController);
+
+// GET all assignments for class
+app.get('/classes/:id/assignments', getClassAssignmentsController);
+
+// GET all student submitted assignments
+app.get('/student/:id/assignments', getStudentSubmittedAssignmentsController);
+
+// GET all student grades
+app.get('/student/:id/grades', getStudentGradesController);
+
+/** ============= DTOs ============= */
+/** ============= CONTROLLERS ============= */
+async function createStudentController(req: Request, res: Response) {
 	try {
 		if (isMissingKeys(req.body, ['name'])) {
 			return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
@@ -54,10 +97,9 @@ app.post('/students', async (req: Request, res: Response) => {
 	} catch (error) {
 		res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
 	}
-});
+}
 
-// POST class created
-app.post('/classes', async (req: Request, res: Response) => {
+async function createClassController(req: Request, res: Response) {
     try {
         if (isMissingKeys(req.body, ['name'])) {
             return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
@@ -75,10 +117,9 @@ app.post('/classes', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
-});
+}
 
-// POST student assigned to class
-app.post('/class-enrollments', async (req: Request, res: Response) => {
+async function assignStudentToClassController(req: Request, res: Response) {
     try {
         if (isMissingKeys(req.body, ['studentId', 'classId'])) {
             return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
@@ -131,11 +172,10 @@ app.post('/class-enrollments', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
- 
-});
 
-// POST assignment created
-app.post('/assignments', async (req: Request, res: Response) => {
+}
+
+async function createAssignmentController(req: Request, res: Response) {
     try {
         if (isMissingKeys(req.body, ['classId', 'title'])) {
             return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
@@ -154,11 +194,9 @@ app.post('/assignments', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
-});
+}
 
-
-// POST student assigned to assignment
-app.post('/student-assignments', async (req: Request, res: Response) => {
+async function assignStudentToAssignmentController(req: Request, res: Response) {
     try {
         if (isMissingKeys(req.body, ['studentId', 'assignmentId'])) {
             return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
@@ -199,11 +237,9 @@ app.post('/student-assignments', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
+}
 
-});
-
-// POST student submitted assignment
-app.post('/student-assignments/submit', async (req: Request, res: Response) => {
+async function submitStudentAssignmentController(req: Request, res: Response) {
 	try {
 		if (isMissingKeys(req.body, ['id'])) {
 			return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
@@ -235,10 +271,9 @@ app.post('/student-assignments/submit', async (req: Request, res: Response) => {
 	} catch (error) {
 		res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
 	}
-});
+}
 
-// POST student assignment graded
-app.post('/student-assignments/grade', async (req: Request, res: Response) => {
+async function gradeStudentAssignmentController(req: Request, res: Response) {
     try {
 
         if (isMissingKeys(req.body, ['id', 'grade'])) {
@@ -276,11 +311,9 @@ app.post('/student-assignments/grade', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
-});
+}
 
-
-// GET all students
-app.get('/students', async (req: Request, res: Response) => {
+async function getAllStudentsController(req: Request, res: Response) {
     try {
         const students = await prisma.student.findMany({
             include: {
@@ -296,10 +329,9 @@ app.get('/students', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
-});
+}
 
-// GET a student by id
-app.get('/students/:id', async (req: Request, res: Response) => {
+async function getStudentController(req: Request, res: Response) {
     try {
         const { id } = req.params;
         if(!isUUID(id)) {
@@ -324,10 +356,9 @@ app.get('/students/:id', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
-});
+}
 
-// GET assignment by id
-app.get('/assignments/:id', async (req: Request, res: Response) => {
+async function getAssignmentController(req: Request, res: Response) {
     try {
         const { id } = req.params;
         if(!isUUID(id)) {
@@ -351,10 +382,9 @@ app.get('/assignments/:id', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
-});
+}
 
-// GET all assignments for class
-app.get('/classes/:id/assignments', async (req: Request, res: Response) => {
+async function getClassAssignmentsController(req: Request, res: Response) {
     try {
         const { id } = req.params;
         if(!isUUID(id)) {
@@ -386,10 +416,9 @@ app.get('/classes/:id/assignments', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
-});
+}
 
-// GET all student submitted assignments
-app.get('/student/:id/assignments', async (req: Request, res: Response) => {
+async function getStudentSubmittedAssignmentsController(req: Request, res: Response) {
     try {
         const { id } = req.params;
         if(!isUUID(id)) {
@@ -421,10 +450,9 @@ app.get('/student/:id/assignments', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
-});
+}
 
-// GET all student grades
-app.get('/student/:id/grades', async (req: Request, res: Response) => {
+async function getStudentGradesController(req: Request, res: Response) {
     try {
         const { id } = req.params;
         if(!isUUID(id)) {
@@ -459,8 +487,10 @@ app.get('/student/:id/grades', async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
-})
+}
 
+/** ============= SERVICES ============= */
+/** ============= DATABASE ============= */
 
 const port = process.env.PORT || 3000;
 
