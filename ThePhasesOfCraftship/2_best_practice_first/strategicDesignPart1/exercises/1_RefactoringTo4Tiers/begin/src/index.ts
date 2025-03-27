@@ -1,9 +1,11 @@
 import express, { Request, Response } from 'express';
-import { prisma } from './database';
-import { Student, Class, Assignment, StudentAssignment } from '@prisma/client';
+
 import { error } from 'console';
 import { get } from 'http';
 import { create } from 'domain';
+
+import { db } from './database';
+
 const cors = require('cors');
 const app = express();
 app.use(express.json());
@@ -198,7 +200,7 @@ class ClassNotFoundException extends Error {
     constructor(id: string) {
       super(`Class with id ${id} not found`);
     }
-  }
+}
 
 class StudentAssignmentNotFoundException extends Error {
     constructor() {
@@ -211,21 +213,13 @@ class StudentAssignmentNotFoundException extends Error {
 /** ============= SERVICES ============= */
 async function createStudent(dto: CreateStudentDTO){
     const { name } = dto;
-    const student = await prisma.student.create({
-        data: {
-            name
-        }
-    });
+    const student = db.students.save(name);
     return student;
 }
 
 async function createClass(dto: CreateClassDTO){
     const { name } = dto;
-    const cls = await prisma.class.create({
-        data: {
-            name
-        }
-    });
+    const cls = await db.classes.save(name);
     return cls;
 }
 
@@ -233,82 +227,40 @@ async function assignStudentToClass(dto: AssignStudentToClassDTO) {
     const { studentId, classId } = dto;
 
     // check if student exists
-    const student = await prisma.student.findUnique({
-        where: {
-            id: studentId
-        }
-    });
-
+    const student = await db.students.getById(studentId);
     if (!student) throw new StudentNotFoundException();
 
     // check if class exists
-    const cls = await prisma.class.findUnique({
-        where: {
-            id: classId
-        }
-    });
-
-    // check if student is already enrolled in class
-    const duplicatedClassEnrollment = await prisma.classEnrollment.findFirst({
-        where: {
-            studentId,
-            classId
-        }
-    });
-
-    if (duplicatedClassEnrollment) throw new StudentAlreadyEnrolledException();
-
+    const cls = await db.classes.getById(classId);
     if (!cls) throw new ClassNotFoundException(classId);
 
-    const classEnrollment = await prisma.classEnrollment.create({
-        data: {
-            studentId,
-            classId
-        }
-    });
+    // check if student is already enrolled in class
+    const duplicatedClassEnrollment = await db.classes.getEnrollment(classId, studentId);
+    if (duplicatedClassEnrollment) throw new StudentAlreadyEnrolledException();
+
+    // enroll student in class
+    const classEnrollment = await db.classes.enrollStudent(classId, studentId);
     return classEnrollment;
 }
 
 async function createAssignment(dto: CreateAssignmentDTO) {
     const { classId, title } = dto;
-
-    const assignment = await prisma.assignment.create({
-        data: {
-            classId,
-            title
-        }
-    });
-
+    const assignment = await db.assignments.save(classId, title);
     return assignment;
 }
 
 async function assignStudentToAssignment(dto: AssignStudentToAssignmentDTO) {
     const { studentId, assignmentId } = dto;
     // check if student exists
-    const student = await prisma.student.findUnique({
-        where: {
-            id: studentId
-        }
-    });
-
+    const student = await db.students.getById(studentId);
     if (!student) throw new StudentNotFoundException();
 
     // check if assignment exists
-    const assignment = await prisma.assignment.findUnique({
-        where: {
-            id: assignmentId
-        }
-    });
-
+    const assignment = await db.assignments.getById(assignmentId);
     if (!assignment) throw new AssignmentNotFoundException();
 
-    const studentAssignment = await prisma.studentAssignment.create({
-        data: {
-            studentId,
-            assignmentId,
-        }
-    });
-
+    // assign student to assignment
+    const studentAssignment = await db.assignments.assignStudent(assignmentId, studentId);
     return studentAssignment;
 }
 
@@ -316,23 +268,10 @@ async function submitStudentAssignment(dto: SubmitStudentAssignmentDTO) {
     const { id } = dto;
 		
     // check if student assignment exists
-    const studentAssignment = await prisma.studentAssignment.findUnique({
-        where: {
-            id
-        }
-    });
-
+    const studentAssignment = await db.assignments.getById(id);
     if (!studentAssignment) throw new StudentAssignmentNotFoundException();
 
-    const studentAssignmentUpdated = await prisma.studentAssignment.update({
-        where: {
-            id
-        },
-        data: {
-            status: 'submitted'
-        }
-    });
-
+    const studentAssignmentUpdated = await db.assignments.submit(id);
     return studentAssignmentUpdated;
 }
 
@@ -343,67 +282,29 @@ async function gradeStudentAssignment(dto: GradeStudentAssignmentDTO) {
     if (!['A', 'B', 'C', 'D'].includes(grade)) throw new Error(Errors.ValidationError);
     
     // check if student assignment exists
-    const studentAssignment = await prisma.studentAssignment.findUnique({
-        where: {
-            id
-        }
-    });
-
+    const studentAssignment = await db.assignments.getById(id);
     if (!studentAssignment) throw new AssignmentNotFoundException();
 
-    const studentAssignmentUpdated = await prisma.studentAssignment.update({
-        where: {
-            id
-        },
-        data: {
-            grade,
-        }
-    });
+    // grade student assignment
+    const studentAssignmentUpdated = await db.assignments.grade(id, grade);
     return studentAssignmentUpdated;
 }
 
 async function getAllStudents() {
-    const students = await prisma.student.findMany({
-        include: {
-            classes: true,
-            assignments: true,
-            reportCards: true
-        }, 
-        orderBy: {
-            name: 'asc'
-        }
-    });
+    const students = await db.students.getAll();
     return students;
 }
 
 async function getStudent(id: string) {
     if(!isUUID(id)) throw new Error(Errors.ValidationError);
-    const student = await prisma.student.findUnique({
-        where: {
-            id
-        },
-        include: {
-            classes: true,
-            assignments: true,
-            reportCards: true
-        }
-    });
-
+    const student = await db.students.getById(id);
     if (!student) throw new StudentNotFoundException();
     return student;
 }
 
 async function getAssignment(id: string) {
     if(!isUUID(id)) throw new Error(Errors.ValidationError);
-    const assignment = await prisma.assignment.findUnique({
-        include: {
-            class: true,
-            studentTasks: true
-        },
-        where: {
-            id
-        }
-    });
+    const assignment = await db.assignments.getById(id);
     if (!assignment) throw new AssignmentNotFoundException();
     return assignment;
 }
@@ -412,72 +313,30 @@ async function getClassAssignments(id: string) {
     if(!isUUID(id)) throw new Error(Errors.ValidationError);
 
     // check if class exists
-    const cls = await prisma.class.findUnique({
-        where: {
-            id
-        }
-    });
-
+    const cls = await db.classes.getById(id);
     if (!cls) throw new ClassNotFoundException(id);
 
-    const assignments = await prisma.assignment.findMany({
-        where: {
-            classId: id
-        },
-        include: {
-            class: true,
-            studentTasks: true
-        }
-    });
+    const assignments = await db.classes.getAssignments(id);
     return assignments;
 }
 
 async function getStudentSubmittedAssignments(id: string) {
     if(!isUUID(id)) throw new Error(Errors.ValidationError);
     // check if student exists
-    const student = await prisma.student.findUnique({
-        where: {
-            id
-        }
-    });
-
+    const student = await db.students.getById(id);
     if (!student) throw new StudentNotFoundException();
 
-    const studentAssignments = await prisma.studentAssignment.findMany({
-        where: {
-            studentId: id,
-            status: 'submitted'
-        },
-        include: {
-            assignment: true
-        },
-    });
+    const studentAssignments = await db.students.getAssignments(id);
     return studentAssignments;
 }
 
 async function getStudentGrades(id: string) {
     if(!isUUID(id)) throw new Error(Errors.ValidationError);
     // check if student exists
-    const student = await prisma.student.findUnique({
-        where: {
-            id
-        }
-    });
-
+    const student = await db.students.getById(id);
     if (!student) throw new StudentNotFoundException();
 
-    const studentAssignments = await prisma.studentAssignment.findMany({
-        where: {
-            studentId: id,
-            status: 'submitted',
-            grade: {
-                not: null
-            }
-        },
-        include: {
-            assignment: true
-        },
-    });
+    const studentAssignments = await db.students.getGrades(id);
     return studentAssignments;
 }
 
@@ -612,8 +471,6 @@ async function getStudentGradesController(req: Request, res: Response) {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
 }
-
-/** ============= DATABASE ============= */
 
 const port = process.env.PORT || 3000;
 
