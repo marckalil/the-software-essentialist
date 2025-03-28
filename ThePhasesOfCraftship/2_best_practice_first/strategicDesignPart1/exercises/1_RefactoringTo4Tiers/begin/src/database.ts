@@ -1,10 +1,6 @@
 import { ClassEnrollment, PrismaClient } from '@prisma/client';
 import { Student, Class, Assignment, StudentAssignment } from '@prisma/client';
 
-const prisma = new PrismaClient();
-
-export { prisma }
-
 interface StudentPersistence {
 	save: (name: string) => Promise<Student>;
 	getById: (id: string) => Promise<Student | null>;
@@ -28,7 +24,7 @@ interface AssignmentPersistence {
 	submit: (id: string) => Promise<StudentAssignment>;
 	grade: (id: string, grade: string) => Promise<StudentAssignment>;
 }
-class Database {
+export class Database {
 	public assignments: AssignmentPersistence;
 	public classes: ClassPersistence;
 	public students: StudentPersistence;
@@ -229,5 +225,3 @@ class Database {
 		return studentAssignments;
 	}
 }
-
-export const db = new Database(prisma);
