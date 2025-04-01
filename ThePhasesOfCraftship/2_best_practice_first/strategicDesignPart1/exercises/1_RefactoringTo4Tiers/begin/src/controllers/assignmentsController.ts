@@ -1,19 +1,36 @@
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 
 import { AssignmentsService } from "../services/assignments";
 import {
-	CreateAssignmentDTO,
 	AssignStudentToAssignmentDTO,
+	CreateAssignmentDTO,
+	GradeStudentAssignmentDTO,
 	SubmitStudentAssignmentDTO,
-	GradeStudentAssignmentDTO
 } from '../dtos/assignments';
 import { Errors } from '../errors';
 import { parseForResponse } from '../utils';
 
 export class AssignmentsController {
-	constructor(private readonly assignmentsService: AssignmentsService) {}
+	private readonly router: express.Router;
 
-	async createAssignmentController(req: Request, res: Response) {
+	constructor(private readonly assignmentsService: AssignmentsService) {
+		this.router = express.Router();
+		this.setupRoutes();
+	}
+
+	private setupRoutes() {
+		this.router.post('/', this.createAssignment);
+		this.router.post('/assign', this.assignStudent);
+		this.router.post('/submit', this.submitStudentAssignment);
+		this.router.post('/grade', this.gradeStudentAssignment);
+		this.router.get('/:id', this.getAssignment);
+	}
+
+	getRouter() {
+		return this.router;
+	}
+
+	async createAssignment(req: Request, res: Response) {
     try {
 			const dto = CreateAssignmentDTO.fromRequestBody(req.body);
 			const assignment = await this.assignmentsService.createAssignment(dto);    
@@ -23,7 +40,7 @@ export class AssignmentsController {
     }
 	}
 
-	async assignStudentToAssignmentController(req: Request, res: Response) {
+	async assignStudent(req: Request, res: Response) {
     try {
 			const dto = AssignStudentToAssignmentDTO.fromRequestBody(req.body);
 			const studentAssignment = await this.assignmentsService.assignStudentToAssignment(dto);
@@ -33,7 +50,7 @@ export class AssignmentsController {
     }
 	}
 
-	async submitStudentAssignmentController(req: Request, res: Response) {
+	async submitStudentAssignment(req: Request, res: Response) {
 		try {
 			const dto = SubmitStudentAssignmentDTO.fromRequestBody(req.body);
 			const studentAssignmentUpdated = await this.assignmentsService.submitStudentAssignment(dto);
@@ -43,7 +60,7 @@ export class AssignmentsController {
 		}
 	}
 
-	async gradeStudentAssignmentController(req: Request, res: Response) {
+	async gradeStudentAssignment(req: Request, res: Response) {
     try {
 			const dto = GradeStudentAssignmentDTO.fromRequestBody(req.body);
 			const studentAssignmentUpdated = await this.assignmentsService.gradeStudentAssignment(dto);
@@ -53,7 +70,7 @@ export class AssignmentsController {
     }
 	}
 
-	async getAssignmentController(req: Request, res: Response) {
+	async getAssignment(req: Request, res: Response) {
     try {
 			const { id } = req.params;
 			const assignment = await this.assignmentsService.getAssignment(id);

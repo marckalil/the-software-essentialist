@@ -6,6 +6,7 @@ import { AssignmentsService } from './services/assignments';
 import { StudentsController } from './controllers/studentsController';
 import { ClassesController } from './controllers/classesController';
 import { AssignmentsController } from './controllers/assignmentsController';
+import { Server } from './server';
 
 const prisma = new PrismaClient();
 const db = new Database(prisma);
@@ -17,3 +18,9 @@ const studentsService = new StudentsService(db);
 const assignmentsController = new AssignmentsController(assignmentsService);
 const classesController = new ClassesController(classesService);
 const studentsController = new StudentsController(studentsService);
+
+export const server = new Server(
+	assignmentsController,
+	classesController,
+	studentsController
+);

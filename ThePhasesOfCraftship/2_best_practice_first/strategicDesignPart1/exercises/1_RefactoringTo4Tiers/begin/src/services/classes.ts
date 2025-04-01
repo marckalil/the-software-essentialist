@@ -17,7 +17,7 @@ export class ClassesService {
 		return cls;
 	}
 
-  async assignStudentToClass(dto: AssignStudentToClassDTO) {
+  async enrollStudent(dto: AssignStudentToClassDTO) {
 		const { studentId, classId } = dto;
 
 		// check if student exists

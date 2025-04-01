@@ -1,5 +1,11 @@
-import { ClassEnrollment, PrismaClient } from '@prisma/client';
-import { Student, Class, Assignment, StudentAssignment } from '@prisma/client';
+import {
+	Assignment,
+	Class,
+	ClassEnrollment,
+	PrismaClient,
+	Student,
+	StudentAssignment
+} from '@prisma/client';
 
 interface StudentPersistence {
 	save: (name: string) => Promise<Student>;
@@ -103,7 +109,7 @@ export class Database {
 		}
 	}
 	private async saveClass(name: string): Promise<Class> {
-		const cls = await prisma.class.create({
+		const cls = await this.prisma.class.create({
 			data: {
 					name
 			}
@@ -112,7 +118,7 @@ export class Database {
 	}
 
 	private async enrollStudentToClass(classId: string, studentId: string): Promise<ClassEnrollment> {
-		const classEnrollment = await prisma.classEnrollment.create({
+		const classEnrollment = await this.prisma.classEnrollment.create({
 			data: {
 					studentId,
 					classId
