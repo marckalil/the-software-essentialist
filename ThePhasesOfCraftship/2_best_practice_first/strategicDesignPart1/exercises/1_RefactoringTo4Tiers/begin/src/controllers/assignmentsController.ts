@@ -7,7 +7,7 @@ import {
 	GradeStudentAssignmentDTO,
 	SubmitStudentAssignmentDTO,
 } from '../dtos/assignments';
-import { Errors } from '../shared/errors';
+import { ErrorExceptionType } from '../shared/constants';
 import { parseForResponse } from '../utils';
 
 export class AssignmentsController {
@@ -36,7 +36,7 @@ export class AssignmentsController {
 			const assignment = await this.assignmentsService.createAssignment(dto);    
 			res.status(201).json({ error: undefined, data: parseForResponse(assignment), success: true });
     } catch (error) {
-			res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
+			res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
     }
 	}
 
@@ -46,7 +46,7 @@ export class AssignmentsController {
 			const studentAssignment = await this.assignmentsService.assignStudentToAssignment(dto);
 			res.status(201).json({ error: undefined, data: parseForResponse(studentAssignment), success: true });
     } catch (error) {
-        res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
+        res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
     }
 	}
 
@@ -56,7 +56,7 @@ export class AssignmentsController {
 			const studentAssignmentUpdated = await this.assignmentsService.submitStudentAssignment(dto);
 			res.status(200).json({ error: undefined, data: parseForResponse(studentAssignmentUpdated), success: true });
 		} catch (error) {
-			res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
+			res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
 		}
 	}
 
@@ -66,7 +66,7 @@ export class AssignmentsController {
 			const studentAssignmentUpdated = await this.assignmentsService.gradeStudentAssignment(dto);
 			res.status(200).json({ error: undefined, data: parseForResponse(studentAssignmentUpdated), success: true });
     } catch (error) {
-			res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
+			res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
     }
 	}
 
@@ -76,7 +76,7 @@ export class AssignmentsController {
 			const assignment = await this.assignmentsService.getAssignment(id);
 			res.status(200).json({ error: undefined, data: parseForResponse(assignment), success: true });
     } catch (error) {
-			res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
+			res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
     }
 	}
 }

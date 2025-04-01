@@ -1,4 +1,4 @@
-export const Errors = {
+export const ErrorExceptionType = {
     ValidationError: 'ValidationError',
     StudentNotFound: 'StudentNotFound',
     ClassNotFound: 'ClassNotFound',
