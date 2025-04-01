@@ -1,4 +1,4 @@
-import { InvalidRequestBodyException } from "../exceptions";
+import { InvalidRequestBodyException } from "../shared/exceptions";
 import { isMissingKeys } from "../utils";
 
 export class CreateStudentDTO{

@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 
 import { ClassesService } from "../services/classes";
 import { CreateClassDTO, AssignStudentToClassDTO } from '../dtos/classes';
-import { Errors } from '../errors';
+import { Errors } from '../shared/errors';
 import { parseForResponse } from '../utils';
 
 export class ClassesController {

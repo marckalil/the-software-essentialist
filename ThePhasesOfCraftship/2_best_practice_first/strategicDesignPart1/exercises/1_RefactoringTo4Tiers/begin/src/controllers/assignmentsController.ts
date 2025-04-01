@@ -7,7 +7,7 @@ import {
 	GradeStudentAssignmentDTO,
 	SubmitStudentAssignmentDTO,
 } from '../dtos/assignments';
-import { Errors } from '../errors';
+import { Errors } from '../shared/errors';
 import { parseForResponse } from '../utils';
 
 export class AssignmentsController {

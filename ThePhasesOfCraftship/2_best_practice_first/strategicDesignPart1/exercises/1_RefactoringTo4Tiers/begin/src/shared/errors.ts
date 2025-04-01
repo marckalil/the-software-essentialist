@@ -6,4 +6,4 @@ export const Errors = {
     ServerError: 'ServerError',
     ClientError: 'ClientError',
     StudentAlreadyEnrolled: 'StudentAlreadyEnrolled'
-  }
+  } as const;

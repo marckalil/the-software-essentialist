@@ -1,11 +1,11 @@
 import { Database } from "../database";
 import { CreateClassDTO, AssignStudentToClassDTO } from "../dtos/classes";
-import { Errors } from "../errors";
+import { Errors } from '../shared/errors';
 import { 
 	StudentNotFoundException, 
 	ClassNotFoundException, 
 	StudentAlreadyEnrolledException
-} from "../exceptions";
+} from "../shared/exceptions";
 import { isUUID } from "../utils";
 
 export class ClassesService {

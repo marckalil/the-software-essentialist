@@ -1,7 +1,7 @@
 import express,{ Request, Response } from 'express';
 
 import { CreateStudentDTO } from "../dtos/students";
-import { Errors } from "../errors";
+import { Errors } from '../shared/errors';
 import { StudentsService } from "../services/students";
 import { parseForResponse } from '../utils';
 

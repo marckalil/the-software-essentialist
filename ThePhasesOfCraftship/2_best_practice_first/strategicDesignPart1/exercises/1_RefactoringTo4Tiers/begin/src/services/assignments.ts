@@ -1,11 +1,11 @@
 import { Database } from "../database";
 import { CreateAssignmentDTO, AssignStudentToAssignmentDTO, SubmitStudentAssignmentDTO, GradeStudentAssignmentDTO } from "../dtos/assignments";
-import { Errors } from "../errors";
+import { Errors } from '../shared/errors';
 import {
 	StudentNotFoundException,
 	AssignmentNotFoundException,
 	StudentAssignmentNotFoundException
-} from "../exceptions";
+} from "../shared/exceptions";
 import { isUUID } from "../utils";
 
 export class AssignmentsService {

@@ -1,7 +1,7 @@
 import { Database } from "../database";
 import { CreateStudentDTO } from "../dtos/students";
-import { Errors } from "../errors";
-import { StudentNotFoundException } from "../exceptions";
+import { Errors } from '../shared/errors';
+import { StudentNotFoundException } from "../shared/exceptions";
 import { isUUID } from "../utils";
 
 export class StudentsService {
