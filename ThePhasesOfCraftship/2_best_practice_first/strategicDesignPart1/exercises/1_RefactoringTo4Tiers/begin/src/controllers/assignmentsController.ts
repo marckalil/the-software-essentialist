@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 
 import { AssignmentsService } from "../services/assignments";
 import {
@@ -7,15 +7,19 @@ import {
 	GradeStudentAssignmentDTO,
 	SubmitStudentAssignmentDTO,
 } from '../dtos/assignments';
-import { ErrorExceptionType } from '../shared/constants';
+import { ErrorHandler } from '../shared/errors';
 import { parseForResponse } from '../utils';
 
 export class AssignmentsController {
 	private readonly router: express.Router;
 
-	constructor(private readonly assignmentsService: AssignmentsService) {
+	constructor(
+		private readonly assignmentsService: AssignmentsService,
+		private readonly errorHandler: ErrorHandler
+	) {
 		this.router = express.Router();
 		this.setupRoutes();
+		this.setupErrorHandler();
 	}
 
 	private setupRoutes() {
@@ -30,53 +34,77 @@ export class AssignmentsController {
 		return this.router;
 	}
 
-	async createAssignment(req: Request, res: Response) {
+	private setupErrorHandler() {
+		this.router.use(this.errorHandler);
+	}
+
+	async createAssignment(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
     try {
 			const dto = CreateAssignmentDTO.fromRequestBody(req.body);
 			const assignment = await this.assignmentsService.createAssignment(dto);    
 			res.status(201).json({ error: undefined, data: parseForResponse(assignment), success: true });
     } catch (error) {
-			res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
+			next(error);
     }
 	}
 
-	async assignStudent(req: Request, res: Response) {
+	async assignStudent(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
     try {
 			const dto = AssignStudentToAssignmentDTO.fromRequestBody(req.body);
 			const studentAssignment = await this.assignmentsService.assignStudentToAssignment(dto);
 			res.status(201).json({ error: undefined, data: parseForResponse(studentAssignment), success: true });
     } catch (error) {
-        res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
+			next(error);
     }
 	}
 
-	async submitStudentAssignment(req: Request, res: Response) {
+	async submitStudentAssignment(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
 		try {
 			const dto = SubmitStudentAssignmentDTO.fromRequestBody(req.body);
 			const studentAssignmentUpdated = await this.assignmentsService.submitStudentAssignment(dto);
 			res.status(200).json({ error: undefined, data: parseForResponse(studentAssignmentUpdated), success: true });
 		} catch (error) {
-			res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
+			next(error);
 		}
 	}
 
-	async gradeStudentAssignment(req: Request, res: Response) {
+	async gradeStudentAssignment(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
     try {
 			const dto = GradeStudentAssignmentDTO.fromRequestBody(req.body);
 			const studentAssignmentUpdated = await this.assignmentsService.gradeStudentAssignment(dto);
 			res.status(200).json({ error: undefined, data: parseForResponse(studentAssignmentUpdated), success: true });
     } catch (error) {
-			res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
+			next(error);
     }
 	}
 
-	async getAssignment(req: Request, res: Response) {
+	async getAssignment(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
     try {
 			const { id } = req.params;
 			const assignment = await this.assignmentsService.getAssignment(id);
 			res.status(200).json({ error: undefined, data: parseForResponse(assignment), success: true });
     } catch (error) {
-			res.status(500).json({ error: ErrorExceptionType.ServerError, data: undefined, success: false });
+			next(error);
     }
 	}
 }
