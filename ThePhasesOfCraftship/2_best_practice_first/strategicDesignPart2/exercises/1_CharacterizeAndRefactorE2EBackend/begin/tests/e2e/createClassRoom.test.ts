@@ -27,16 +27,25 @@ defineFeature(feature, (test) => {
 	});
 
 	test('Fail to create a class room', ({ given, when, then }) => {
-		given('I want to create a class room with no name', () => {
+		let requestBody: any;
+		let response: any;
 
+		given('I want to create a class room with no name', () => {
+			requestBody = {};
 		});
 
-		when('I send a request to create a class room', () => {
-
+		when('I send a request to create a class room', async() => {
+			response = await request(app).post('/classes').send(requestBody);
 		});
 
 		then('the class room should not be created', () => {
-
+			console.log(response.body);
+			expect(response.status).toBe(400);
+			expect(response.body).toEqual({
+				error: 'ValidationError',
+				data: undefined,
+				success: false,
+			});
 		});
 	});
 });
