@@ -2,12 +2,17 @@ import { defineFeature, loadFeature } from "jest-cucumber";
 import request from "supertest";
 import path from "path";
 import { app } from "../../src/index";
+import { resetDatabase } from "../fixtures/reset";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/createClassRoom.feature")
 );
 
 defineFeature(feature, (test) => {
+	afterEach(() => {
+		resetDatabase();
+	});
+	
 	test('Sucessfully create a class room', ({ given, when, then }) => {
 		let requestBody: any;
 		let response: any;
