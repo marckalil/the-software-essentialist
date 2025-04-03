@@ -9,6 +9,11 @@ Feature: Create Class Room
         When I send a request to create a class room
         Then the class room should be created successfully
 
+    Scenario: Class room already exists
+        Given I want to create a class that already exists
+        When I send a request to create a class room
+        Then the class should not be created
+
     Scenario: Fail to create a class room
         Given I want to create a class room with no name
         When I send a request to create a class room
