@@ -13,7 +13,7 @@ defineFeature(feature, (test) => {
 		resetDatabase();
 	});
 	
-	test('Sucessfully create a class room', ({ given, when, then }) => {
+	test('Successfully create a class room', ({ given, when, then }) => {
 		let requestBody: any;
 		let response: any;
 
