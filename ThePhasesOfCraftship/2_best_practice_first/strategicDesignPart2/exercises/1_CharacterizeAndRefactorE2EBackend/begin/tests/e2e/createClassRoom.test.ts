@@ -3,7 +3,7 @@ import request from "supertest";
 import path from "path";
 import { app } from "../../src/index";
 import { resetDatabase } from "../fixtures/reset";
-import { response } from "express";
+import { ClassRoomBuilder } from "../fixtures/ClassRoomBuilder";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/createClassRoom.feature")
@@ -36,8 +36,10 @@ defineFeature(feature, (test) => {
     const className = "History";
     let requestBody: any;
     let response: any;
-    given("I want to create a class that already exists", () => {
+    given("I want to create a class that already exists", async () => {
       requestBody = { name: className };
+      const classRoomBuilder = new ClassRoomBuilder();
+      await classRoomBuilder.withName(className).build();
     });
 
     when("I send a request to create a class room", async () => {
@@ -67,7 +69,6 @@ defineFeature(feature, (test) => {
     });
 
     then("the class room should not be created", () => {
-      console.log(response.body);
       expect(response.status).toBe(400);
       expect(response.body).toEqual({
         error: "ValidationError",
