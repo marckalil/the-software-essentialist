@@ -22,8 +22,15 @@ export class StudentBuilder {
   }
 
   async build(): Promise<Student> {
-    const student = await prisma.student.create({
-      data: {
+    const student = await prisma.student.upsert({
+      where: {
+        email: this._email,
+      },
+      update: {
+        name: this._name,
+        email: this._email,
+      },
+      create: {
         name: this._name,
         email: this._email,
       },

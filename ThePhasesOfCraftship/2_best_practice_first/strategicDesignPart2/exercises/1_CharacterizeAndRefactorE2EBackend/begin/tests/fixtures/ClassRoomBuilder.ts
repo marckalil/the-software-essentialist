@@ -17,8 +17,14 @@ export class ClassRoomBuilder {
   }
 
   async build(): Promise<Class> {
-    let classroom = await prisma.class.create({
-      data: {
+    let classroom = await prisma.class.upsert({
+      where: {
+        name: this.classRoom.name as string,
+      },
+      update: {
+        name: this.classRoom.name as string,
+      },
+      create: {
         name: this.classRoom.name as string,
       },
     });

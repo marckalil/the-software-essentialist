@@ -10,7 +10,7 @@ const feature = loadFeature(
 );
 
 defineFeature(feature, (test) => {
-  afterEach(async () => {
+  beforeEach(async () => {
     await resetDatabase();
   });
 
