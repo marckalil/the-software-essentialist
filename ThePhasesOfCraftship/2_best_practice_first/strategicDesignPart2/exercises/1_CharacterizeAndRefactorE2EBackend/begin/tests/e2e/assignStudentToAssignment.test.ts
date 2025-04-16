@@ -8,6 +8,7 @@ import { StudentBuilder } from "../fixtures/StudentBuilder";
 import { ClassRoomBuilder } from "../fixtures/ClassRoomBuilder";
 import { ClassEnrollmentBuilder } from "../fixtures/ClassEnrollmentBuilder";
 import { AssignmentBuilder } from "../fixtures/AssignmentBuilder";
+import { StudentAssignmentBuilder } from "../fixtures/StudentAssignmentBuilder";
 
 const classroomBuilder = new ClassRoomBuilder().withName("Math");
 const studentBuilder = new StudentBuilder().withName("John").withRandomEmail();
@@ -15,6 +16,9 @@ const classEnrollmentBuilder = new ClassEnrollmentBuilder()
   .from(classroomBuilder)
   .and(studentBuilder);
 const assignmentBuilder = new AssignmentBuilder().from(classroomBuilder);
+const studentAssignmentBuilder = new StudentAssignmentBuilder()
+  .from(classEnrollmentBuilder)
+  .and(assignmentBuilder);
 
 async function buildEnrollmentAndAssignment(): Promise<{
   assignmentId: string;
@@ -78,12 +82,12 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("a student is already assigned to the assignment", async () => {
-      const { assignmentId, studentId } = await buildEnrollmentAndAssignment();
+      const { assignmentId, studentId } =
+        await studentAssignmentBuilder.build();
       requestBody = {
         assignmentId,
         studentId,
       };
-      await request(app).post("/student-assignments").send(requestBody);
     });
     when("I assign the student again", async () => {
       response = await request(app)
