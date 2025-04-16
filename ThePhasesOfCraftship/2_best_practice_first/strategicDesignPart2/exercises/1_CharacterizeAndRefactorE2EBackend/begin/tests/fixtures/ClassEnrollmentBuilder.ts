@@ -3,7 +3,7 @@ import { prisma } from "../../src/database";
 import { ClassRoomBuilder } from "./ClassRoomBuilder";
 import { StudentBuilder } from "./StudentBuilder";
 
-export class EnrollmentBuilder {
+export class ClassEnrollmentBuilder {
   private classRoomBuilder?: ClassRoomBuilder;
   private studentBuilder?: StudentBuilder;
 
@@ -25,7 +25,7 @@ export class EnrollmentBuilder {
 
     const classRoom = await this.classRoomBuilder.build();
     const student = await this.studentBuilder.build();
-    const enrollment = await prisma.classEnrollment.upsert({
+    const classEnrollment = await prisma.classEnrollment.upsert({
       where: {
         studentId_classId: {
           studentId: student.id,
@@ -42,6 +42,6 @@ export class EnrollmentBuilder {
       },
     });
 
-    return enrollment;
+    return classEnrollment;
   }
 }

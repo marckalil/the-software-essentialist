@@ -6,13 +6,12 @@ import { app } from "../../src";
 import { resetDatabase } from "../fixtures/reset";
 import { StudentBuilder } from "../fixtures/StudentBuilder";
 import { ClassRoomBuilder } from "../fixtures/ClassRoomBuilder";
-import { Assignment, Student } from "@prisma/client";
-import { EnrollmentBuilder } from "../fixtures/EnrollementBuilder";
+import { ClassEnrollmentBuilder } from "../fixtures/ClassEnrollmentBuilder";
 import { AssignmentBuilder } from "../fixtures/AssignmentBuilder";
 
 const classroomBuilder = new ClassRoomBuilder().withName("Math");
 const studentBuilder = new StudentBuilder().withName("John").withRandomEmail();
-const enrollmentBuilder = new EnrollmentBuilder()
+const classEnrollmentBuilder = new ClassEnrollmentBuilder()
   .from(classroomBuilder)
   .and(studentBuilder);
 const assignmentBuilder = new AssignmentBuilder().from(classroomBuilder);
@@ -21,11 +20,11 @@ async function buildEnrollmentAndAssignment(): Promise<{
   assignmentId: string;
   studentId: string;
 }> {
-  const enrollment = await enrollmentBuilder.build();
+  const classEnrollment = await classEnrollmentBuilder.build();
   const assignment = await assignmentBuilder.build();
   return {
     assignmentId: assignment.id,
-    studentId: enrollment.studentId,
+    studentId: classEnrollment.studentId,
   };
 }
 

@@ -5,18 +5,18 @@ import { app } from "../../src";
 import { resetDatabase } from "../fixtures/reset";
 import { StudentBuilder } from "../fixtures/StudentBuilder";
 import { ClassRoomBuilder } from "../fixtures/ClassRoomBuilder";
-import { EnrollmentBuilder } from "../fixtures/EnrollementBuilder";
+import { ClassEnrollmentBuilder } from "../fixtures/ClassEnrollmentBuilder";
 import { AssignmentBuilder } from "../fixtures/AssignmentBuilder";
 import { StudentAssignmentBuilder } from "../fixtures/StudentAssignmentBuilder";
 
 const classroomBuilder = new ClassRoomBuilder().withName("Math");
 const studentBuilder = new StudentBuilder().withName("John").withRandomEmail();
-const enrollmentBuilder = new EnrollmentBuilder()
+const classEnrollmentBuilder = new ClassEnrollmentBuilder()
   .from(classroomBuilder)
   .and(studentBuilder);
 const assignmentBuilder = new AssignmentBuilder().from(classroomBuilder);
 const studentAssignmentBuilder = new StudentAssignmentBuilder()
-  .from(enrollmentBuilder)
+  .from(classEnrollmentBuilder)
   .and(assignmentBuilder);
 
 async function assignStudent(): Promise<{

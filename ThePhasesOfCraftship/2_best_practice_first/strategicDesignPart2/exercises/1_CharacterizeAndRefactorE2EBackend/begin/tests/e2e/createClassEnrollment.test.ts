@@ -6,6 +6,8 @@ import { app } from "../../src";
 import { ClassRoomBuilder } from "../fixtures/ClassRoomBuilder";
 import { resetDatabase } from "../fixtures/reset";
 import { StudentBuilder } from "../fixtures/StudentBuilder";
+import { ClassEnrollment } from "@prisma/client";
+import { ClassEnrollmentBuilder } from "../fixtures/ClassEnrollmentBuilder";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/createClassEnrollment.feature")
@@ -52,19 +54,22 @@ defineFeature(feature, (test) => {
   }) => {
     let requestBody: any;
     let response: any;
+    let classEnrollment: ClassEnrollment;
     given("the student is already enrolled to the class", async () => {
-      const classRoom = await new ClassRoomBuilder().withName("Math").build();
-      const student = await new StudentBuilder()
+      const classRoomBuilder = await new ClassRoomBuilder().withName("Math");
+      const studentBuilder = await new StudentBuilder()
         .withName("John")
-        .withRandomEmail()
+        .withRandomEmail();
+      classEnrollment = await new ClassEnrollmentBuilder()
+        .from(classRoomBuilder)
+        .and(studentBuilder)
         .build();
-      requestBody = {
-        classId: classRoom.id,
-        studentId: student.id,
-      };
-      await request(app).post("/class-enrollments").send(requestBody);
     });
     when("I enroll the student to the class again", async () => {
+      requestBody = {
+        classId: classEnrollment.classId,
+        studentId: classEnrollment.studentId,
+      };
       response = await request(app)
         .post("/class-enrollments")
         .send(requestBody);
