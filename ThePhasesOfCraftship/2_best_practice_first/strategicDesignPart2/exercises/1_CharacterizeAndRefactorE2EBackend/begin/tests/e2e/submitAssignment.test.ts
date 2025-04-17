@@ -8,6 +8,7 @@ import { ClassRoomBuilder } from "../fixtures/ClassRoomBuilder";
 import { ClassEnrollmentBuilder } from "../fixtures/ClassEnrollmentBuilder";
 import { AssignmentBuilder } from "../fixtures/AssignmentBuilder";
 import { StudentAssignmentBuilder } from "../fixtures/StudentAssignmentBuilder";
+import { AssignmentSubmissionBuilder } from "../fixtures/AssignmentSubmissionBuilder";
 
 const classroomBuilder = new ClassRoomBuilder().withName("Math");
 const studentBuilder = new StudentBuilder().withName("John").withRandomEmail();
@@ -66,12 +67,15 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("I have already submitted my assignment", async () => {
-      const { assignmentId, studentId } = await assignStudent();
+      const assignmentSubmissionBuilder =
+        new AssignmentSubmissionBuilder().from(studentAssignmentBuilder);
+      const { assignmentId, studentId } = (
+        await assignmentSubmissionBuilder.build()
+      ).studentAssignment;
       requestBody = {
         assignmentId,
         studentId,
       };
-      await request(app).post("/student-assignments/submit").send(requestBody);
     });
     when("I try to submit it again", async () => {
       response = await request(app)
