@@ -3,11 +3,8 @@ import path from "path";
 import request from "supertest";
 
 import { app } from "../../src";
-import { ClassRoomBuilder } from "../fixtures/ClassRoomBuilder";
 import { resetDatabase } from "../fixtures/reset";
-import { StudentBuilder } from "../fixtures/StudentBuilder";
-import { ClassEnrollment } from "@prisma/client";
-import { ClassEnrollmentBuilder } from "../fixtures/ClassEnrollmentBuilder";
+import { dbTestUtils } from "../fixtures/dbTestUtils";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/createClassEnrollment.feature")
@@ -21,11 +18,8 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("an existing student and an existing class", async () => {
-      const classRoom = await new ClassRoomBuilder().withName("Math").build();
-      const student = await new StudentBuilder()
-        .withName("John")
-        .withRandomEmail()
-        .build();
+      const classRoom = await dbTestUtils.createClassRoom();
+      const student = await dbTestUtils.createStudent();
       requestBody = {
         classId: classRoom.id,
         studentId: student.id,
@@ -54,22 +48,14 @@ defineFeature(feature, (test) => {
   }) => {
     let requestBody: any;
     let response: any;
-    let classEnrollment: ClassEnrollment;
     given("the student is already enrolled to the class", async () => {
-      const classRoomBuilder = await new ClassRoomBuilder().withName("Math");
-      const studentBuilder = await new StudentBuilder()
-        .withName("John")
-        .withRandomEmail();
-      classEnrollment = await new ClassEnrollmentBuilder()
-        .from(classRoomBuilder)
-        .and(studentBuilder)
-        .build();
-    });
-    when("I enroll the student to the class again", async () => {
+      const classEnrollment = await dbTestUtils.enrollStudentToClass();
       requestBody = {
         classId: classEnrollment.classId,
         studentId: classEnrollment.studentId,
       };
+    });
+    when("I enroll the student to the class again", async () => {
       response = await request(app)
         .post("/class-enrollments")
         .send(requestBody);

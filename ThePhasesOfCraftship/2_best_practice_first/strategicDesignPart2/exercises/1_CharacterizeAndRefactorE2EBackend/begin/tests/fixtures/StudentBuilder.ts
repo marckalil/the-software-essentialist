@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { Student } from "@prisma/client";
 import { prisma } from "../../src/database";
+import type { Student } from "./types";
 
 export class StudentBuilder {
   private _name: string;

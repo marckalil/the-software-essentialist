@@ -3,7 +3,7 @@ import request from "supertest";
 import path from "path";
 import { app } from "../../src/index";
 import { resetDatabase } from "../fixtures/reset";
-import { ClassRoomBuilder } from "../fixtures/ClassRoomBuilder";
+import { dbTestUtils } from "../fixtures/dbTestUtils";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/createClassRoom.feature")
@@ -17,15 +17,12 @@ defineFeature(feature, (test) => {
   test("Successfully create a class room", ({ given, when, then }) => {
     let requestBody: any;
     let response: any;
-
     given(/^I want to create a class room named "(.*)"$/, (name) => {
       requestBody = { name };
     });
-
     when("I send a request to create a class room", async () => {
       response = await request(app).post("/classes").send(requestBody);
     });
-
     then("the class room should be created successfully", () => {
       expect(response.status).toBe(201);
       expect(response.body.data.name).toBe(requestBody.name);
@@ -33,19 +30,15 @@ defineFeature(feature, (test) => {
   });
 
   test("Class room already exists", ({ given, when, then }) => {
-    const className = "History";
     let requestBody: any;
     let response: any;
     given("I want to create a class that already exists", async () => {
-      requestBody = { name: className };
-      const classRoomBuilder = new ClassRoomBuilder();
-      await classRoomBuilder.withName(className).build();
+      const { name } = await dbTestUtils.createClassRoom();
+      requestBody = { name };
     });
-
     when("I send a request to create a class room", async () => {
       response = await request(app).post("/classes").send(requestBody);
     });
-
     then("the class should not be created", () => {
       expect(response.status).toBe(409);
       expect(response.body).toEqual({

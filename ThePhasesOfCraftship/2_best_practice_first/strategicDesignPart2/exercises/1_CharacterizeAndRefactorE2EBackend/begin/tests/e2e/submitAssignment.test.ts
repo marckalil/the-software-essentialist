@@ -3,33 +3,7 @@ import path from "path";
 import request from "supertest";
 import { app } from "../../src";
 import { resetDatabase } from "../fixtures/reset";
-import { StudentBuilder } from "../fixtures/StudentBuilder";
-import { ClassRoomBuilder } from "../fixtures/ClassRoomBuilder";
-import { ClassEnrollmentBuilder } from "../fixtures/ClassEnrollmentBuilder";
-import { AssignmentBuilder } from "../fixtures/AssignmentBuilder";
-import { StudentAssignmentBuilder } from "../fixtures/StudentAssignmentBuilder";
-import { AssignmentSubmissionBuilder } from "../fixtures/AssignmentSubmissionBuilder";
-
-const classroomBuilder = new ClassRoomBuilder().withName("Math");
-const studentBuilder = new StudentBuilder().withName("John").withRandomEmail();
-const classEnrollmentBuilder = new ClassEnrollmentBuilder()
-  .from(classroomBuilder)
-  .and(studentBuilder);
-const assignmentBuilder = new AssignmentBuilder().from(classroomBuilder);
-const studentAssignmentBuilder = new StudentAssignmentBuilder()
-  .from(classEnrollmentBuilder)
-  .and(assignmentBuilder);
-
-async function assignStudent(): Promise<{
-  assignmentId: string;
-  studentId: string;
-}> {
-  const { assignmentId, studentId } = await studentAssignmentBuilder.build();
-  return {
-    assignmentId,
-    studentId,
-  };
-}
+import { dbTestUtils } from "../fixtures/dbTestUtils";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/submitAssignment.feature")
@@ -44,7 +18,8 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("I have been assigned an assignment", async () => {
-      const { assignmentId, studentId } = await assignStudent();
+      const { assignmentId, studentId } =
+        await dbTestUtils.assignStudentToAssignment();
       requestBody = {
         assignmentId,
         studentId,
@@ -67,11 +42,8 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("I have already submitted my assignment", async () => {
-      const assignmentSubmissionBuilder =
-        new AssignmentSubmissionBuilder().from(studentAssignmentBuilder);
-      const { assignmentId, studentId } = (
-        await assignmentSubmissionBuilder.build()
-      ).studentAssignment;
+      const { studentAssignment } = await dbTestUtils.submitAssignment();
+      const { assignmentId, studentId } = studentAssignment;
       requestBody = {
         assignmentId,
         studentId,

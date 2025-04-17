@@ -1,4 +1,4 @@
-import { AssignmentSubmission, StudentAssignment } from "@prisma/client";
+import type { AssignmentSubmission, StudentAssignment } from "./types";
 import { StudentAssignmentBuilder } from "./StudentAssignmentBuilder";
 import { prisma } from "../../src/database";
 

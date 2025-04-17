@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
-import { Class } from "@prisma/client";
 import { prisma } from "../../src/database";
+import type { ClassRoom } from "./types";
 
 export class ClassRoomBuilder {
-  private classRoom: Partial<Class>;
+  private classRoom: Partial<ClassRoom>;
 
   constructor() {
     this.classRoom = {
@@ -16,7 +16,7 @@ export class ClassRoomBuilder {
     return this;
   }
 
-  async build(): Promise<Class> {
+  async build(): Promise<ClassRoom> {
     let classroom = await prisma.class.upsert({
       where: {
         name: this.classRoom.name as string,

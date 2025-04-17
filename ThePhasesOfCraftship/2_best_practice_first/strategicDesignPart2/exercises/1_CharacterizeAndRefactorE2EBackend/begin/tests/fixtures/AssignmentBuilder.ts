@@ -1,7 +1,7 @@
-import { Assignment } from "@prisma/client";
-import { prisma } from "../../src/database";
-import { ClassRoomBuilder } from "./ClassRoomBuilder";
 import { faker } from "@faker-js/faker";
+import { Assignment } from "./types";
+import { ClassRoomBuilder } from "./ClassRoomBuilder";
+import { prisma } from "../../src/database";
 
 export class AssignmentBuilder {
   private classRoomBuilder?: ClassRoomBuilder;

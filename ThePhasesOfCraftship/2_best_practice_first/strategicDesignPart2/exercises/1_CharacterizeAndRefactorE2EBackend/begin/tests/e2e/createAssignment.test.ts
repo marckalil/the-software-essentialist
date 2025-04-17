@@ -4,7 +4,7 @@ import request from "supertest";
 
 import { app } from "../../src";
 import { resetDatabase } from "../fixtures/reset";
-import { ClassRoomBuilder } from "../fixtures/ClassRoomBuilder";
+import { dbTestUtils } from "../fixtures/dbTestUtils";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/createAssignment.feature")
@@ -19,7 +19,7 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("a class exists", async () => {
-      const classRoom = await new ClassRoomBuilder().withName("Math").build();
+      const classRoom = await dbTestUtils.createClassRoom();
       requestBody = {
         classId: classRoom.id,
         title: "Math Assignment",
@@ -41,16 +41,14 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("a class exist and no title is given to an assignment", async () => {
-      const classRoom = await new ClassRoomBuilder().withName("Math").build();
+      const classRoom = await dbTestUtils.createClassRoom();
       requestBody = {
         classId: classRoom.id,
       };
     });
-
     when("I create an assignment for the class", async () => {
       response = await request(app).post("/assignments").send(requestBody);
     });
-
     then("I should see an error message", () => {
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty("error", "ValidationError");

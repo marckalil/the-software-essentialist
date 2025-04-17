@@ -4,33 +4,7 @@ import request from "supertest";
 
 import { app } from "../../src";
 import { resetDatabase } from "../fixtures/reset";
-import { StudentBuilder } from "../fixtures/StudentBuilder";
-import { ClassRoomBuilder } from "../fixtures/ClassRoomBuilder";
-import { ClassEnrollmentBuilder } from "../fixtures/ClassEnrollmentBuilder";
-import { AssignmentBuilder } from "../fixtures/AssignmentBuilder";
-import { StudentAssignmentBuilder } from "../fixtures/StudentAssignmentBuilder";
-
-const classroomBuilder = new ClassRoomBuilder().withName("Math");
-const studentBuilder = new StudentBuilder().withName("John").withRandomEmail();
-const classEnrollmentBuilder = new ClassEnrollmentBuilder()
-  .from(classroomBuilder)
-  .and(studentBuilder);
-const assignmentBuilder = new AssignmentBuilder().from(classroomBuilder);
-const studentAssignmentBuilder = new StudentAssignmentBuilder()
-  .from(classEnrollmentBuilder)
-  .and(assignmentBuilder);
-
-async function buildEnrollmentAndAssignment(): Promise<{
-  assignmentId: string;
-  studentId: string;
-}> {
-  const classEnrollment = await classEnrollmentBuilder.build();
-  const assignment = await assignmentBuilder.build();
-  return {
-    assignmentId: assignment.id,
-    studentId: classEnrollment.studentId,
-  };
-}
+import { dbTestUtils } from "../fixtures/dbTestUtils";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/assignStudentToAssignment.feature")
@@ -50,11 +24,11 @@ defineFeature(feature, (test) => {
     given(
       "there is an existing student enrolled to a class with an assignment",
       async () => {
-        const { assignmentId, studentId } =
-          await buildEnrollmentAndAssignment();
+        const classEnrollment = await dbTestUtils.enrollStudentToClass();
+        const assignment = await dbTestUtils.createAssignment();
         requestBody = {
-          assignmentId,
-          studentId,
+          assignmentId: assignment.id,
+          studentId: classEnrollment.studentId,
         };
       }
     );
@@ -83,7 +57,7 @@ defineFeature(feature, (test) => {
     let response: any;
     given("a student is already assigned to the assignment", async () => {
       const { assignmentId, studentId } =
-        await studentAssignmentBuilder.build();
+        await dbTestUtils.assignStudentToAssignment();
       requestBody = {
         assignmentId,
         studentId,
