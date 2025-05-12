@@ -1,4 +1,5 @@
 import { AssignmentBuilder } from "./AssignmentBuilder";
+import { AssignmentGradeBuilder } from "./AssignmentGradeBuilder";
 import { AssignmentSubmissionBuilder } from "./AssignmentSubmissionBuilder";
 import { ClassEnrollmentBuilder } from "./ClassEnrollmentBuilder";
 import { ClassRoomBuilder } from "./ClassRoomBuilder";
@@ -6,6 +7,7 @@ import { StudentAssignmentBuilder } from "./StudentAssignmentBuilder";
 import { StudentBuilder } from "./StudentBuilder";
 import type {
   Assignment,
+  AssignmentGrade,
   AssignmentSubmission,
   ClassEnrollment,
   ClassRoom,
@@ -29,6 +31,10 @@ const studentAssignmentBuilder = new StudentAssignmentBuilder()
 
 const assignmentSubmissionBuilder = new AssignmentSubmissionBuilder().from(
   studentAssignmentBuilder
+);
+
+const assignmentGradeBuilder = new AssignmentGradeBuilder().from(
+  assignmentSubmissionBuilder
 );
 
 /**
@@ -120,6 +126,14 @@ export async function submitAssignment(): Promise<{
     studentAssignment,
   };
 }
+
+export async function gradeAssignment(): Promise<{
+  assignmentGrade: AssignmentGrade;
+  studentAssignment: StudentAssignment;
+}> {
+  return await assignmentGradeBuilder.build();
+}
+
 export const dbTestUtils = {
   createStudent,
   createClassRoom,

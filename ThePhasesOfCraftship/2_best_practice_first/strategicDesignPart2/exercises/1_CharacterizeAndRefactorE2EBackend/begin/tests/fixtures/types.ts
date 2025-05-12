@@ -30,3 +30,9 @@ export type AssignmentSubmission = {
   studentAssignmentId: string;
   submissionContent: string | null;
 };
+
+export type AssignmentGrade = {
+  id: string;
+  assignmentSubmissionId: string;
+  grade: string | null;
+};
