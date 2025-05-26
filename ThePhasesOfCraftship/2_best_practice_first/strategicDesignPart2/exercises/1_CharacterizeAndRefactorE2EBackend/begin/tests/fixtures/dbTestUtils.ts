@@ -41,8 +41,13 @@ const assignmentGradeBuilder = new AssignmentGradeBuilder().from(
  * @returns {Promise<Student>} A promise that resolves to a Student object.
  * @description Creates a new student to the database.
  */
-async function createStudent(): Promise<Student> {
-  const { id, name, email } = await studentBuilder.build();
+export async function createStudent(
+  inputName: string = "John"
+): Promise<Student> {
+  const { id, name, email } = await new StudentBuilder()
+    .withName(inputName)
+    .withRandomEmail()
+    .build();
   return {
     id,
     name,
