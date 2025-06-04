@@ -24,7 +24,6 @@ defineFeature(feature, (test) => {
       response = await request(app).get(`/assignments/${assignment.id}`);
     });
     then("I should get the details of the assignment", () => {
-      console.log(JSON.stringify(response.body.data, null, 2));
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty("data");
       expect(response.body.data).toHaveProperty("title", assignment.title);
