@@ -3,7 +3,7 @@ import path from "path";
 import request from "supertest";
 
 import { app } from "../../src";
-import { createStudent } from "../fixtures/dbTestUtils";
+import { dbTestUtils } from "../fixtures/dbTestUtils";
 import { resetDatabase } from "../fixtures/reset";
 import { Student } from "../fixtures/types";
 
@@ -20,9 +20,9 @@ defineFeature(feature, (test) => {
     let students: Student[] = [];
     given("a list of students", async () => {
       students = await Promise.all([
-        createStudent("John"),
-        createStudent("Jane"),
-        createStudent("Alice"),
+        dbTestUtils.createStudent("John"),
+        dbTestUtils.createStudent("Jane"),
+        dbTestUtils.createStudent("Alice"),
       ]);
     });
     when("I want to retrieve an existing student", async () => {
@@ -45,9 +45,9 @@ defineFeature(feature, (test) => {
     let response: any;
     given("a list of students", async () => {
       await Promise.all([
-        createStudent("John"),
-        createStudent("Jane"),
-        createStudent("Alice"),
+        dbTestUtils.createStudent("John"),
+        dbTestUtils.createStudent("Jane"),
+        dbTestUtils.createStudent("Alice"),
       ]);
     });
     when("I want to retrieve a non-existing student", async () => {

@@ -1,44 +1,38 @@
 import { prisma } from "../../src/database";
-import { ClassRoomBuilder } from "./ClassRoomBuilder";
-import { StudentBuilder } from "./StudentBuilder";
-import type { ClassEnrollment } from "./types";
+import type { ClassEnrollment, ClassRoom, Student } from "./types";
 
 export class ClassEnrollmentBuilder {
-  private classRoomBuilder?: ClassRoomBuilder;
-  private studentBuilder?: StudentBuilder;
+  private classRoom?: ClassRoom;
+  private student?: Student;
 
-  from(classRoomBuilder: ClassRoomBuilder) {
-    this.classRoomBuilder = classRoomBuilder;
+  from(classRoom: ClassRoom) {
+    this.classRoom = classRoom;
     return this;
   }
 
-  and(studentBuilder: StudentBuilder) {
-    this.studentBuilder = studentBuilder;
+  and(student: Student) {
+    this.student = student;
     return this;
   }
 
   async build(): Promise<ClassEnrollment> {
-    if (!this.classRoomBuilder)
-      throw new Error("You must define the classroom builder");
-    if (!this.studentBuilder)
-      throw new Error("You must define the student builder");
+    if (!this.classRoom) throw new Error("You must define the classroom");
+    if (!this.student) throw new Error("You must define the student");
 
-    const classRoom = await this.classRoomBuilder.build();
-    const student = await this.studentBuilder.build();
     const classEnrollment = await prisma.classEnrollment.upsert({
       where: {
         studentId_classId: {
-          studentId: student.id,
-          classId: classRoom.id,
+          studentId: this.student.id,
+          classId: this.classRoom.id,
         },
       },
       update: {
-        studentId: student.id,
-        classId: classRoom.id,
+        studentId: this.student.id,
+        classId: this.classRoom.id,
       },
       create: {
-        studentId: student.id,
-        classId: classRoom.id,
+        studentId: this.student.id,
+        classId: this.classRoom.id,
       },
     });
 

@@ -21,6 +21,7 @@ export type Assignment = {
 };
 
 export type StudentAssignment = {
+  id: string;
   assignmentId: string;
   studentId: string;
 };

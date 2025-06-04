@@ -49,7 +49,12 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("the student is already enrolled to the class", async () => {
-      const classEnrollment = await dbTestUtils.enrollStudentToClass();
+      const classRoom = await dbTestUtils.createClassRoom();
+      const student = await dbTestUtils.createStudent();
+      const classEnrollment = await dbTestUtils.enrollStudentToClass(
+        classRoom,
+        student
+      );
       requestBody = {
         classId: classEnrollment.classId,
         studentId: classEnrollment.studentId,

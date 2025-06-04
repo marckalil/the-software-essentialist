@@ -18,7 +18,8 @@ defineFeature(feature, (test) => {
     let assignment: Assignment;
     let response: any;
     given("an assignment exists", async () => {
-      assignment = await dbTestUtils.createAssignment();
+      const classRoom = await dbTestUtils.createClassRoom();
+      assignment = await dbTestUtils.createAssignment(classRoom);
     });
     when("I request this assignment", async () => {
       response = await request(app).get(`/assignments/${assignment.id}`);

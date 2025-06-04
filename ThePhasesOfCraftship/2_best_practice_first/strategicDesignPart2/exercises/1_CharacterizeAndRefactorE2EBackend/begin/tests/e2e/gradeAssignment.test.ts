@@ -3,7 +3,7 @@ import path from "path";
 import request from "supertest";
 import { app } from "../../src";
 import { resetDatabase } from "../fixtures/reset";
-import { gradeAssignment, submitAssignment } from "../fixtures/dbTestUtils";
+import { dbTestUtils } from "../fixtures/dbTestUtils";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/gradeAssignment.feature")
@@ -18,7 +18,18 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("an assignment was submitted", async () => {
-      const { studentAssignment } = await submitAssignment();
+      const student = await dbTestUtils.createStudent();
+      const classRoom = await dbTestUtils.createClassRoom();
+      const classEnrollment = await dbTestUtils.enrollStudentToClass(
+        classRoom,
+        student
+      );
+      const assignment = await dbTestUtils.createAssignment(classRoom);
+      const studentAssignment = await dbTestUtils.assignStudentToAssignment(
+        classEnrollment,
+        assignment
+      );
+      await dbTestUtils.submitAssignment(studentAssignment);
       const { assignmentId, studentId } = studentAssignment;
       requestBody = {
         assignmentId,
@@ -44,7 +55,24 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("an assignment was already graded", async () => {
-      const { studentAssignment } = await gradeAssignment();
+      const student = await dbTestUtils.createStudent();
+      const classRoom = await dbTestUtils.createClassRoom();
+      const classEnrollment = await dbTestUtils.enrollStudentToClass(
+        classRoom,
+        student
+      );
+      const assignment = await dbTestUtils.createAssignment(classRoom);
+      const studentAssignment = await dbTestUtils.assignStudentToAssignment(
+        classEnrollment,
+        assignment
+      );
+      const assignmentSubmission = await dbTestUtils.submitAssignment(
+        studentAssignment
+      );
+      await dbTestUtils.gradeAssignment(
+        assignmentSubmission,
+        studentAssignment
+      );
       const { assignmentId, studentId } = studentAssignment;
       requestBody = {
         assignmentId,

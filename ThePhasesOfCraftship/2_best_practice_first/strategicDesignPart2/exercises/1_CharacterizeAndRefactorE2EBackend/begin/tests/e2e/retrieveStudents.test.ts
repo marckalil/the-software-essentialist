@@ -4,7 +4,7 @@ import request from "supertest";
 
 import { app } from "../../src";
 import { resetDatabase } from "../fixtures/reset";
-import { createStudent } from "../fixtures/dbTestUtils";
+import { dbTestUtils } from "../fixtures/dbTestUtils";
 import { Student } from "../fixtures/types";
 
 const feature = loadFeature(
@@ -24,9 +24,9 @@ defineFeature(feature, (test) => {
     let students: Student[] = [];
     given("there are students registered", async () => {
       students = await Promise.all([
-        createStudent("John"),
-        createStudent("Jane"),
-        createStudent("Alice"),
+        dbTestUtils.createStudent("John"),
+        dbTestUtils.createStudent("Jane"),
+        dbTestUtils.createStudent("Alice"),
       ]);
     });
     when("I as request all the students", async () => {

@@ -1,36 +1,40 @@
 import { prisma } from "../../src/database";
-import { AssignmentSubmissionBuilder } from "./AssignmentSubmissionBuilder";
-import { AssignmentGrade, StudentAssignment } from "./types";
+import {
+  AssignmentGrade,
+  AssignmentSubmission,
+  StudentAssignment,
+} from "./types";
 
 export class AssignmentGradeBuilder {
-  private assignmentSubmissionBuilder?: AssignmentSubmissionBuilder;
+  private assignmentSubmission?: AssignmentSubmission;
+  private studentAssignment?: StudentAssignment;
 
   constructor() {
-    this.assignmentSubmissionBuilder = undefined;
+    this.assignmentSubmission = undefined;
+    this.studentAssignment = undefined;
   }
 
-  from(assignmentSubmissionBuilder: AssignmentSubmissionBuilder) {
-    this.assignmentSubmissionBuilder = assignmentSubmissionBuilder;
+  from(assignmentSubmission: AssignmentSubmission) {
+    this.assignmentSubmission = assignmentSubmission;
     return this;
   }
 
-  async build(): Promise<{
-    assignmentGrade: AssignmentGrade;
-    studentAssignment: StudentAssignment;
-  }> {
-    if (!this.assignmentSubmissionBuilder)
-      throw new Error("You must define the assignment submission builder");
-    const { assignmentSubmission, studentAssignment } =
-      await this.assignmentSubmissionBuilder.build();
+  and(studentAssignment: StudentAssignment) {
+    this.studentAssignment = studentAssignment;
+    return this;
+  }
+
+  async build(): Promise<AssignmentGrade> {
+    if (!this.assignmentSubmission)
+      throw new Error("You must define the assignment submission");
+    if (!this.studentAssignment)
+      throw new Error("You must define the student assignment");
     const assignmentGrade = await prisma.gradedAssignment.create({
       data: {
         grade: "A",
-        assignmentSubmissionId: assignmentSubmission.id,
+        assignmentSubmissionId: this.assignmentSubmission.id,
       },
     });
-    return {
-      assignmentGrade,
-      studentAssignment,
-    };
+    return assignmentGrade;
   }
 }

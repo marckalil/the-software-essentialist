@@ -1,35 +1,30 @@
 import { StudentAssignment } from "@prisma/client";
-import { AssignmentBuilder } from "./AssignmentBuilder";
-import { ClassEnrollmentBuilder } from "./ClassEnrollmentBuilder";
 import { prisma } from "../../src/database";
+import { Assignment, ClassEnrollment } from "./types";
 
 export class StudentAssignmentBuilder {
-  private classEnrollmentBuilder?: ClassEnrollmentBuilder;
-  private assignmentBuilder?: AssignmentBuilder;
+  private classEnrollment?: ClassEnrollment;
+  private assignment?: Assignment;
 
-  from(classEnrollmentBuilder: ClassEnrollmentBuilder) {
-    this.classEnrollmentBuilder = classEnrollmentBuilder;
+  from(classEnrollment: ClassEnrollment) {
+    this.classEnrollment = classEnrollment;
     return this;
   }
 
-  and(assignmentBuilder: AssignmentBuilder) {
-    this.assignmentBuilder = assignmentBuilder;
+  and(assignment: Assignment) {
+    this.assignment = assignment;
     return this;
   }
 
   async build(): Promise<StudentAssignment> {
-    if (!this.classEnrollmentBuilder)
-      throw new Error("you must define the enrollment builder");
-    if (!this.assignmentBuilder)
-      throw new Error("you must define the assignment builder");
-
-    const assignment = await this.assignmentBuilder.build();
-    const enrollment = await this.classEnrollmentBuilder.build();
+    if (!this.classEnrollment)
+      throw new Error("you must define the class enrollment");
+    if (!this.assignment) throw new Error("you must define the assignment");
 
     const studentAssignment = await prisma.studentAssignment.create({
       data: {
-        studentId: enrollment.studentId,
-        assignmentId: assignment.id,
+        studentId: this.classEnrollment.studentId,
+        assignmentId: this.assignment.id,
       },
     });
 

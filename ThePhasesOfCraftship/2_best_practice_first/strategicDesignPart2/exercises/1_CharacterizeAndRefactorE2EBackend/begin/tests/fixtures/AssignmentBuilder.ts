@@ -1,33 +1,30 @@
 import { faker } from "@faker-js/faker";
-import { Assignment } from "./types";
-import { ClassRoomBuilder } from "./ClassRoomBuilder";
+import { Assignment, ClassRoom } from "./types";
 import { prisma } from "../../src/database";
 
 export class AssignmentBuilder {
-  private classRoomBuilder?: ClassRoomBuilder;
+  private classRoom?: ClassRoom;
   private assignment: Partial<Assignment>;
 
   constructor() {
-    this.classRoomBuilder = undefined;
+    this.classRoom = undefined;
     this.assignment = {
       title: faker.lorem.word(),
     };
   }
 
-  from(classRoomBuilder: ClassRoomBuilder) {
-    this.classRoomBuilder = classRoomBuilder;
+  from(classRoom: ClassRoom) {
+    this.classRoom = classRoom;
     return this;
   }
 
   async build(): Promise<Assignment> {
-    if (!this.classRoomBuilder)
-      throw new Error("You must define the classroom builder");
+    if (!this.classRoom) throw new Error("You must define the classroom");
 
-    const classRoom = await this.classRoomBuilder.build();
     const assignment = await prisma.assignment.create({
       data: {
         title: this.assignment.title as string,
-        classId: classRoom.id,
+        classId: this.classRoom.id,
       },
     });
 

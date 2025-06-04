@@ -18,8 +18,18 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("I have been assigned an assignment", async () => {
+      const student = await dbTestUtils.createStudent();
+      const classRoom = await dbTestUtils.createClassRoom();
+      const classEnrollment = await dbTestUtils.enrollStudentToClass(
+        classRoom,
+        student
+      );
+      const assignment = await dbTestUtils.createAssignment(classRoom);
       const { assignmentId, studentId } =
-        await dbTestUtils.assignStudentToAssignment();
+        await dbTestUtils.assignStudentToAssignment(
+          classEnrollment,
+          assignment
+        );
       requestBody = {
         assignmentId,
         studentId,
@@ -42,7 +52,18 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("I have already submitted my assignment", async () => {
-      const { studentAssignment } = await dbTestUtils.submitAssignment();
+      const student = await dbTestUtils.createStudent();
+      const classRoom = await dbTestUtils.createClassRoom();
+      const classEnrollment = await dbTestUtils.enrollStudentToClass(
+        classRoom,
+        student
+      );
+      const assignment = await dbTestUtils.createAssignment(classRoom);
+      const studentAssignment = await dbTestUtils.assignStudentToAssignment(
+        classEnrollment,
+        assignment
+      );
+      await dbTestUtils.submitAssignment(studentAssignment);
       const { assignmentId, studentId } = studentAssignment;
       requestBody = {
         assignmentId,

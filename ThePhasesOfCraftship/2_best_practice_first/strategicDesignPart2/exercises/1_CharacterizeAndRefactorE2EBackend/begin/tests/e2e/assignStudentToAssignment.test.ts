@@ -24,8 +24,13 @@ defineFeature(feature, (test) => {
     given(
       "there is an existing student enrolled to a class with an assignment",
       async () => {
-        const classEnrollment = await dbTestUtils.enrollStudentToClass();
-        const assignment = await dbTestUtils.createAssignment();
+        const classRoom = await dbTestUtils.createClassRoom();
+        const student = await dbTestUtils.createStudent();
+        const classEnrollment = await dbTestUtils.enrollStudentToClass(
+          classRoom,
+          student
+        );
+        const assignment = await dbTestUtils.createAssignment(classRoom);
         requestBody = {
           assignmentId: assignment.id,
           studentId: classEnrollment.studentId,
@@ -56,8 +61,22 @@ defineFeature(feature, (test) => {
     let requestBody: any;
     let response: any;
     given("a student is already assigned to the assignment", async () => {
+      const classRoom = await dbTestUtils.createClassRoom();
+      const student = await dbTestUtils.createStudent();
+      const classEnrollment = await dbTestUtils.enrollStudentToClass(
+        classRoom,
+        student
+      );
+      const assignment = await dbTestUtils.createAssignment(classRoom);
+      requestBody = {
+        assignmentId: assignment.id,
+        studentId: classEnrollment.studentId,
+      };
       const { assignmentId, studentId } =
-        await dbTestUtils.assignStudentToAssignment();
+        await dbTestUtils.assignStudentToAssignment(
+          classEnrollment,
+          assignment
+        );
       requestBody = {
         assignmentId,
         studentId,

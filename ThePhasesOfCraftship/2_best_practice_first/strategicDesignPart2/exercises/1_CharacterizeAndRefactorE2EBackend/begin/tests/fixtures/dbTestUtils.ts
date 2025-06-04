@@ -15,35 +15,7 @@ import type {
   StudentAssignment,
 } from "./types";
 
-const studentBuilder = new StudentBuilder().withName("John").withRandomEmail();
-
-const classroomBuilder = new ClassRoomBuilder().withName("Math");
-
-const classEnrollmentBuilder = new ClassEnrollmentBuilder()
-  .from(classroomBuilder)
-  .and(studentBuilder);
-
-const assignmentBuilder = new AssignmentBuilder().from(classroomBuilder);
-
-const studentAssignmentBuilder = new StudentAssignmentBuilder()
-  .from(classEnrollmentBuilder)
-  .and(assignmentBuilder);
-
-const assignmentSubmissionBuilder = new AssignmentSubmissionBuilder().from(
-  studentAssignmentBuilder
-);
-
-const assignmentGradeBuilder = new AssignmentGradeBuilder().from(
-  assignmentSubmissionBuilder
-);
-
-/**
- * @returns {Promise<Student>} A promise that resolves to a Student object.
- * @description Creates a new student to the database.
- */
-export async function createStudent(
-  inputName: string = "John"
-): Promise<Student> {
+async function createStudent(inputName: string = "John"): Promise<Student> {
   const { id, name, email } = await new StudentBuilder()
     .withName(inputName)
     .withRandomEmail()
@@ -55,41 +27,32 @@ export async function createStudent(
   };
 }
 
-/**
- * @returns {Promise<ClassRoom>} A promise that resolves to a ClassRoom object.
- * @description Creates a new classroom to the database.
- */
-async function createClassRoom(): Promise<ClassRoom> {
-  const { id, name } = await classroomBuilder.build();
+async function createClassRoom(inputName = "Math"): Promise<ClassRoom> {
+  const { id, name } = await new ClassRoomBuilder().withName(inputName).build();
   return {
     id,
     name,
   };
 }
 
-/**
- * @returns {Promise<ClassEnrollment>} A promise that resolves to a ClassEnrollment object.
- * @description
- * -> Creates a new student to the database
- * -> Creates a new classroom to the database
- * -> Enrolls the student to the class.
- */
-async function enrollStudentToClass(): Promise<ClassEnrollment> {
-  const { classId, studentId } = await classEnrollmentBuilder.build();
+async function enrollStudentToClass(
+  classRoom: ClassRoom,
+  student: Student
+): Promise<ClassEnrollment> {
+  const { classId, studentId } = await new ClassEnrollmentBuilder()
+    .from(classRoom)
+    .and(student)
+    .build();
   return {
     classId,
     studentId,
   };
 }
 
-/**
- * @returns {Promise<Assignment>} A promise that resolves to an Assignment object.
- * @description
- * -> Creates a new classroom to the database
- * -> Creates a new assignment for the class.
- */
-async function createAssignment(): Promise<Assignment> {
-  const { id, classId, title } = await assignmentBuilder.build();
+async function createAssignment(classRoom: ClassRoom): Promise<Assignment> {
+  const { id, classId, title } = await new AssignmentBuilder()
+    .from(classRoom)
+    .build();
   return {
     id,
     classId,
@@ -97,53 +60,42 @@ async function createAssignment(): Promise<Assignment> {
   };
 }
 
-/**
- * @returns {Promise<StudentAssignment>} A promise that resolves to a StudentAssignment object.
- * @description
- * -> Enrolls a student to a class.
- * -> Creates an assignment for the class.
- * -> Assigns the student to the assignment.
- */
-async function assignStudentToAssignment(): Promise<StudentAssignment> {
-  const { assignmentId, studentId } = await studentAssignmentBuilder.build();
-  return {
-    assignmentId,
-    studentId,
-  };
+async function assignStudentToAssignment(
+  classEnrollment: ClassEnrollment,
+  assignment: Assignment
+): Promise<StudentAssignment> {
+  const studentAssignment = await new StudentAssignmentBuilder()
+    .from(classEnrollment)
+    .and(assignment)
+    .build();
+  return studentAssignment;
 }
 
-/**
- * @returns {Promise<{ assignmentSubmission: AssignmentSubmission; studentAssignment: StudentAssignment }>} A promise that resolves to an object containing an AssignmentSubmission and a StudentAssignment.
- * @description
- * -> Enrolls a student to a class.
- * -> Creates an assignment for the class.
- * -> Assigns the student to the assignment.
- * -> Submits the assignment.
- */
-export async function submitAssignment(): Promise<{
-  assignmentSubmission: AssignmentSubmission;
-  studentAssignment: StudentAssignment;
-}> {
-  const { assignmentSubmission, studentAssignment } =
-    await assignmentSubmissionBuilder.build();
-  return {
-    assignmentSubmission,
-    studentAssignment,
-  };
+async function submitAssignment(
+  assignment: StudentAssignment
+): Promise<AssignmentSubmission> {
+  const assignmentSubmission = await new AssignmentSubmissionBuilder()
+    .from(assignment)
+    .build();
+  return assignmentSubmission;
 }
 
-export async function gradeAssignment(): Promise<{
-  assignmentGrade: AssignmentGrade;
-  studentAssignment: StudentAssignment;
-}> {
-  return await assignmentGradeBuilder.build();
+async function gradeAssignment(
+  assignmentSubmission: AssignmentSubmission,
+  studentAssignment: StudentAssignment
+): Promise<AssignmentGrade> {
+  return await new AssignmentGradeBuilder()
+    .from(assignmentSubmission)
+    .and(studentAssignment)
+    .build();
 }
 
 export const dbTestUtils = {
-  createStudent,
-  createClassRoom,
-  enrollStudentToClass,
-  createAssignment,
   assignStudentToAssignment,
+  createAssignment,
+  createClassRoom,
+  createStudent,
+  enrollStudentToClass,
+  gradeAssignment,
   submitAssignment,
 };
