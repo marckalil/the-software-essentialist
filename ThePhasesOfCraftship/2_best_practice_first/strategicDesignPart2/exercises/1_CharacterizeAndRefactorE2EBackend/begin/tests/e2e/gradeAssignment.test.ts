@@ -71,7 +71,8 @@ defineFeature(feature, (test) => {
       );
       await dbTestUtils.gradeAssignment(
         assignmentSubmission,
-        studentAssignment
+        studentAssignment,
+        "C"
       );
       const { assignmentId, studentId } = studentAssignment;
       requestBody = {

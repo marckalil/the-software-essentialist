@@ -82,11 +82,13 @@ async function submitAssignment(
 
 async function gradeAssignment(
   assignmentSubmission: AssignmentSubmission,
-  studentAssignment: StudentAssignment
+  studentAssignment: StudentAssignment,
+  grade: string
 ): Promise<AssignmentGrade> {
   return await new AssignmentGradeBuilder()
     .from(assignmentSubmission)
     .and(studentAssignment)
+    .withGrade(grade)
     .build();
 }
 
