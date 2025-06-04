@@ -1,4 +1,4 @@
-Feature:: Grade an assignment
+Feature: Grade an assignment
 
 	As a teacher
 	I want to grade an assignment
