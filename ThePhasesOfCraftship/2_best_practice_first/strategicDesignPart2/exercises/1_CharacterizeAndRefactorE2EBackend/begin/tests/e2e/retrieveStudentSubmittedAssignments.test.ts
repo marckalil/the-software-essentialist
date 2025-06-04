@@ -4,11 +4,14 @@ import request from "supertest";
 
 import { app } from "../../src";
 import { resetDatabase } from "../fixtures/reset";
-import { Assignment, Student, StudentAssignment } from "../fixtures/types";
+import { Student, StudentAssignment } from "../fixtures/types";
 import { dbTestUtils } from "../fixtures/dbTestUtils";
 
 const feature = loadFeature(
-  path.join(__dirname, "../features/retrieveSubmittedAssignments.feature")
+  path.join(
+    __dirname,
+    "../features/retrieveStudentSubmittedAssignments.feature"
+  )
 );
 
 defineFeature(feature, (test) => {
