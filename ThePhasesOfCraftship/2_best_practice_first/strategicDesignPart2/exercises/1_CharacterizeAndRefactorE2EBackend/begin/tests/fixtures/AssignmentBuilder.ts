@@ -13,7 +13,7 @@ export class AssignmentBuilder {
     };
   }
 
-  from(classRoom: ClassRoom) {
+  fromClassRoom(classRoom: ClassRoom) {
     this.classRoom = classRoom;
     return this;
   }

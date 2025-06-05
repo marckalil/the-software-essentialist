@@ -6,12 +6,12 @@ export class StudentAssignmentBuilder {
   private classEnrollment?: ClassEnrollment;
   private assignment?: Assignment;
 
-  from(classEnrollment: ClassEnrollment) {
+  fromClassEnrollment(classEnrollment: ClassEnrollment) {
     this.classEnrollment = classEnrollment;
     return this;
   }
 
-  and(assignment: Assignment) {
+  andAssignment(assignment: Assignment) {
     this.assignment = assignment;
     return this;
   }

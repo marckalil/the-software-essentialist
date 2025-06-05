@@ -5,12 +5,12 @@ export class ClassEnrollmentBuilder {
   private classRoom?: ClassRoom;
   private student?: Student;
 
-  from(classRoom: ClassRoom) {
+  fromClassRoom(classRoom: ClassRoom) {
     this.classRoom = classRoom;
     return this;
   }
 
-  and(student: Student) {
+  andStudent(student: Student) {
     this.student = student;
     return this;
   }

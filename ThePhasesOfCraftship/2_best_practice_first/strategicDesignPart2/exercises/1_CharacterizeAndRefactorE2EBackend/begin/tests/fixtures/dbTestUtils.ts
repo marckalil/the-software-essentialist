@@ -40,8 +40,8 @@ async function enrollStudentToClass(
   student: Student
 ): Promise<ClassEnrollment> {
   const { classId, studentId } = await new ClassEnrollmentBuilder()
-    .from(classRoom)
-    .and(student)
+    .fromClassRoom(classRoom)
+    .andStudent(student)
     .build();
   return {
     classId,
@@ -51,7 +51,7 @@ async function enrollStudentToClass(
 
 async function createAssignment(classRoom: ClassRoom): Promise<Assignment> {
   const { id, classId, title } = await new AssignmentBuilder()
-    .from(classRoom)
+    .fromClassRoom(classRoom)
     .build();
   return {
     id,
@@ -65,17 +65,17 @@ async function assignStudentToAssignment(
   assignment: Assignment
 ): Promise<StudentAssignment> {
   const studentAssignment = await new StudentAssignmentBuilder()
-    .from(classEnrollment)
-    .and(assignment)
+    .fromClassEnrollment(classEnrollment)
+    .andAssignment(assignment)
     .build();
   return studentAssignment;
 }
 
 async function submitAssignment(
-  assignment: StudentAssignment
+  studentAssignment: StudentAssignment
 ): Promise<AssignmentSubmission> {
   const assignmentSubmission = await new AssignmentSubmissionBuilder()
-    .from(assignment)
+    .fromStudentAssignment(studentAssignment)
     .build();
   return assignmentSubmission;
 }
@@ -86,8 +86,8 @@ async function gradeAssignment(
   grade: string
 ): Promise<AssignmentGrade> {
   return await new AssignmentGradeBuilder()
-    .from(assignmentSubmission)
-    .and(studentAssignment)
+    .fromAssignmentSubmission(assignmentSubmission)
+    .andStudentAssignment(studentAssignment)
     .withGrade(grade)
     .build();
 }

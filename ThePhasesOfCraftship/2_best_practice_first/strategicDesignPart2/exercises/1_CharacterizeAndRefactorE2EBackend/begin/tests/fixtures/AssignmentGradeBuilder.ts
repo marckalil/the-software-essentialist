@@ -16,12 +16,12 @@ export class AssignmentGradeBuilder {
     this.grade = undefined;
   }
 
-  from(assignmentSubmission: AssignmentSubmission) {
+  fromAssignmentSubmission(assignmentSubmission: AssignmentSubmission) {
     this.assignmentSubmission = assignmentSubmission;
     return this;
   }
 
-  and(studentAssignment: StudentAssignment) {
+  andStudentAssignment(studentAssignment: StudentAssignment) {
     this.studentAssignment = studentAssignment;
     return this;
   }

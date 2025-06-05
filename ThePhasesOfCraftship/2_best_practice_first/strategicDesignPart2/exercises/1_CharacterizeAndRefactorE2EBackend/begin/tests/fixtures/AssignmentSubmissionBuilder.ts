@@ -12,7 +12,7 @@ export class AssignmentSubmissionBuilder {
     };
   }
 
-  from(studentAssignment: StudentAssignment) {
+  fromStudentAssignment(studentAssignment: StudentAssignment) {
     this.studentAssignment = studentAssignment;
     return this;
   }
