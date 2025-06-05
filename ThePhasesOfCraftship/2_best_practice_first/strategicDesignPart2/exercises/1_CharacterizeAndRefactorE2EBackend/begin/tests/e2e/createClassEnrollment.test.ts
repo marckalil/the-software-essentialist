@@ -5,6 +5,7 @@ import request from "supertest";
 import { app } from "../../src";
 import { resetDatabase } from "../fixtures/reset";
 import { dbTestUtils } from "../fixtures/dbTestUtils";
+import { ClassRoom, Student } from "../fixtures/types";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/createClassEnrollment.feature")
@@ -14,18 +15,27 @@ defineFeature(feature, (test) => {
   beforeEach(async () => {
     await resetDatabase();
   });
-  test("Successfully enroll a student to a class", ({ given, when, then }) => {
+  test("Successfully enroll a student to a class", ({
+    and,
+    given,
+    when,
+    then,
+  }) => {
     let requestBody: any;
     let response: any;
-    given("an existing student and an existing class", async () => {
-      const classRoom = await dbTestUtils.createClassRoom();
-      const student = await dbTestUtils.createStudent();
+    let classRoom: ClassRoom;
+    let student: Student;
+    given("an existing student", async () => {
+      student = await dbTestUtils.createStudent();
+    });
+    and("an existing class", async () => {
+      classRoom = await dbTestUtils.createClassRoom();
+    });
+    when("I enroll the student to the class", async () => {
       requestBody = {
         classId: classRoom.id,
         studentId: student.id,
       };
-    });
-    when("I enroll the student to the class", async () => {
       response = await request(app)
         .post("/class-enrollments")
         .send(requestBody);
