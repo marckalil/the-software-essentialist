@@ -5,6 +5,7 @@ import request from "supertest";
 import { app } from "../../src";
 import { resetDatabase } from "../fixtures/reset";
 import { dbTestUtils } from "../fixtures/dbTestUtils";
+import { Assignment, ClassEnrollment, ClassRoom } from "../fixtures/types";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/assignStudentToAssignment.feature")
@@ -15,29 +16,32 @@ defineFeature(feature, (test) => {
     await resetDatabase();
   });
   test("Successfully assign a student to an assignment", ({
+    and,
     given,
     when,
     then,
   }) => {
     let requestBody: any;
     let response: any;
-    given(
-      "there is an existing student enrolled to a class with an assignment",
-      async () => {
-        const classRoom = await dbTestUtils.createClassRoom();
-        const student = await dbTestUtils.createStudent();
-        const classEnrollment = await dbTestUtils.enrollStudentToClass(
-          classRoom,
-          student
-        );
-        const assignment = await dbTestUtils.createAssignment(classRoom);
-        requestBody = {
-          assignmentId: assignment.id,
-          studentId: classEnrollment.studentId,
-        };
-      }
-    );
+    let assignment: Assignment;
+    let classEnrollment: ClassEnrollment;
+    let classRoom: ClassRoom;
+    given("there is an existing student enrolled to a class", async () => {
+      classRoom = await dbTestUtils.createClassRoom();
+      const student = await dbTestUtils.createStudent();
+      classEnrollment = await dbTestUtils.enrollStudentToClass(
+        classRoom,
+        student
+      );
+    });
+    and("an assignment exists for the class", async () => {
+      assignment = await dbTestUtils.createAssignment(classRoom);
+    });
     when("I assign the student the assignment", async () => {
+      requestBody = {
+        assignmentId: assignment.id,
+        studentId: classEnrollment.studentId,
+      };
       response = await request(app)
         .post("/student-assignments")
         .send(requestBody);
